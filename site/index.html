@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Quaiint is a free skill for your AI assistant that finds the people you were close to and drifted from, then cleans up your contacts across every account. You decide; every change is logged.">
+<meta property="og:title" content="Quaiint: find out who you still know">
+<meta property="og:description" content="A free AI skill that finds the people you've drifted from and cleans up your contacts. No server, full change log, you decide.">
+<title>Quaiint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: left-aligned editorial column; the hero pairs the promise with a live "questions + change log" panel, because the product's output is the pitch */
+:root {
+  --paper: #f2f3ef;
+  --surface: #ffffff;
+  --ink: #17202a;
+  --muted: #5d6670;
+  --rule: #d8dcd4;
+  --accent: #3b6b36;
+  --accent-ink: #ffffff;
+  --accent-soft: #e3ece0;
+  --cut: #a33a2b;
+  --add: #2f6b3a;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body: "Public Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121612; --surface: #1b211b; --ink: #e8ece6; --muted: #a0aa9e; --rule: #2d352c;
+    --accent: #8cc684; --accent-ink: #10170f; --accent-soft: #1f2d1d; --cut: #ec8e7f; --add: #8cc684; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121612; --surface: #1b211b; --ink: #e8ece6; --muted: #a0aa9e; --rule: #2d352c;
+  --accent: #8cc684; --accent-ink: #10170f; --accent-soft: #1f2d1d; --cut: #ec8e7f; --add: #8cc684; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--body); }
+.page { max-width: 1080px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 80px; display: grid; gap: 88px; }
+nav { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.mark { font: 700 20px/1 var(--display); letter-spacing: -.01em; }
+.mark span { color: var(--accent); }
+nav a { color: var(--ink); font-size: 15px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -.015em; }
+h1 { font-size: clamp(40px, 7vw, 72px); line-height: 1.0; font-weight: 700; }
+h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.1; font-weight: 700; }
+h3 { font-size: 20px; line-height: 1.25; font-weight: 700; }
+p { margin: 0; max-width: 62ch; }
+.kicker { font: 500 13px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 48px; align-items: start; }
+.hero-copy { display: grid; gap: 22px; min-width: 0; }
+.hero-copy .lede { font-size: 20px; color: var(--muted); }
+.cta-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.btn { font: 600 16px/1 var(--body); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; text-decoration: none; display: inline-block; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.small { padding: 9px 14px; font-size: 14px; }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+
+/* demo panel */
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; min-width: 0; box-shadow: 0 18px 40px -28px rgba(20, 30, 20, .35); }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--rule); }
+.panel-head .kicker { color: var(--accent); }
+.tag { font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--rule); border-radius: 99px; padding: 5px 8px; }
+.q { padding: 16px 18px; display: grid; gap: 10px; border-bottom: 1px solid var(--rule); }
+.q p { font-size: 15px; }
+.q .who { font-weight: 600; }
+.q .detail { font: 400 13px/1.5 var(--mono); color: var(--muted); }
+.q .choices { display: flex; gap: 8px; flex-wrap: wrap; }
+.q.done { opacity: .55; }
+.q.done .choices { display: none; }
+.q .answer { font: 500 13px var(--mono); color: var(--accent); }
+.log { padding: 14px 18px; background: var(--accent-soft); display: grid; gap: 6px; min-height: 132px; }
+.log .kicker { color: var(--ink); }
+.log ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font: 400 13px/1.5 var(--mono); }
+.log li { display: grid; grid-template-columns: 64px 1fr; gap: 8px; }
+.log .t { color: var(--muted); }
+.log .cut { color: var(--cut); }
+.log .add { color: var(--add); }
+
+/* pain */
+.pain { display: grid; gap: 32px; }
+.pain-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.pain-item { display: grid; gap: 10px; align-content: start; padding-top: 18px; border-top: 2px solid var(--ink); }
+.pain-item p { color: var(--muted); }
+@media (max-width: 860px) { .pain-grid { grid-template-columns: 1fr; } }
+
+/* how */
+.how { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 48px; }
+.how-intro { display: grid; gap: 16px; align-content: start; }
+.split { display: grid; gap: 0; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; background: var(--surface); }
+.split-row { display: grid; grid-template-columns: 150px 1fr; gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--rule); }
+.split-row:last-child { border-bottom: 0; }
+.split-row .who { font: 500 13px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.split-row.you .who { color: var(--accent); }
+@media (max-width: 860px) { .how { grid-template-columns: 1fr; } .split-row { grid-template-columns: 1fr; gap: 4px; } }
+
+.promises { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.promise { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 20px; display: grid; gap: 8px; align-content: start; }
+.promise p { font-size: 15px; color: var(--muted); }
+@media (max-width: 860px) { .promises { grid-template-columns: 1fr; } }
+
+/* proof */
+.proof { display: grid; gap: 28px; }
+.figures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.fig { padding: 20px 16px 20px 0; display: grid; gap: 6px; align-content: start; }
+.fig .n { font: 700 clamp(30px, 4vw, 44px)/1 var(--display); font-variant-numeric: tabular-nums; }
+.fig .l { font-size: 14px; color: var(--muted); }
+@media (max-width: 760px) { .figures { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.quote { font: 500 clamp(22px, 3vw, 28px)/1.35 var(--display); max-width: 30ch; }
+.quote cite { display: block; margin-top: 10px; font: 400 14px var(--body); color: var(--muted); font-style: normal; }
+
+.research { background: var(--accent-soft); border-radius: 14px; padding: 28px; display: grid; gap: 12px; }
+.research p { max-width: 70ch; }
+.research .src { font-size: 14px; color: var(--muted); }
+
+/* get it */
+.get { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+@media (max-width: 860px) { .get { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.steps { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+.steps code, p code { font: 400 14px var(--mono); background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+pre.skill { margin: 0; max-height: 280px; overflow: auto; font: 400 12.5px/1.55 var(--mono); background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; padding: 14px; white-space: pre-wrap; }
+.copied { font: 500 13px var(--mono); color: var(--accent); }
+form { display: grid; gap: 14px; }
+label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+input, select, textarea { font: 400 16px var(--body); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; padding: 11px 12px; width: 100%; }
+textarea { min-height: 84px; resize: vertical; }
+.form-note { font-size: 14px; color: var(--muted); }
+.status { font-size: 15px; font-weight: 600; color: var(--accent); }
+.status.err { color: var(--cut); }
+
+.faq { display: grid; gap: 0; border-top: 1px solid var(--rule); }
+.faq div { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+.faq p { color: var(--muted); }
+@media (max-width: 760px) { .faq div { grid-template-columns: 1fr; gap: 6px; } }
+footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 20px; }
+@media (prefers-reduced-motion: no-preference) { .log li { animation: in .35s ease-out; } @keyframes in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
+</style>
+<style>
+.install { display: flex; align-items: center; gap: 0; border: 1px solid var(--ink); border-radius: 8px; overflow: hidden; max-width: 100%; }
+.install code { font: 500 15px var(--mono); padding: 13px 16px; background: var(--surface); white-space: nowrap; overflow-x: auto; min-width: 0; flex: 1; }
+.install button { border: 0; border-left: 1px solid var(--ink); border-radius: 0; }
+.acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.act { background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 22px; display: grid; gap: 12px; align-content: start; }
+.act .kicker { color: var(--accent); }
+.act ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted); font-size: 15px; }
+@media (max-width: 860px) { .acts { grid-template-columns: 1fr; } }
+.rc { padding: 14px 18px; display: grid; gap: 4px; border-bottom: 1px solid var(--rule); }
+.rc:last-of-type { border-bottom: 0; }
+.rc .top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.rc .who { font-weight: 600; }
+.rc .quiet { font: 500 12px var(--mono); color: var(--muted); }
+.rc p { font-size: 15px; color: var(--muted); }
+.demo-wrap { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 32px; align-items: start; }
+@media (max-width: 860px) { .demo-wrap { grid-template-columns: 1fr; } }
+.works { display: flex; flex-wrap: wrap; gap: 8px; }
+.works span { font: 500 13px var(--mono); border: 1px solid var(--rule); border-radius: 99px; padding: 5px 10px; background: var(--surface); }
+.contact { display: grid; gap: 14px; }
+.addr-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.addr { font: 500 16px var(--mono); background: var(--accent-soft); padding: 8px 12px; border-radius: 8px; overflow-wrap: anywhere; user-select: all; }
+</style>
+
+</head>
+<body>
+<div class="page">
+  <nav aria-label="Site">
+    <div class="mark">Quaiint<span>.</span></div>
+    <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="#how">How it works</a><a href="https://github.com/quaiint/quaiint">GitHub</a><a href="#get">Get it free</a></div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-copy">
+      <div class="kicker">A free skill for the AI assistant you already use</div>
+      <h1>Find out who you still know.</h1>
+      <p class="lede">Quaiint reads who you've emailed over the years and finds the people you were close to and drifted from. Then, if you want, it turns contacts scattered across old accounts into one clean list.</p>
+      <div class="install" role="group" aria-label="Install command">
+        <code id="cmd">npx skills add quaiint/quaiint</code>
+        <button class="btn" id="copy-cmd" type="button">Copy</button>
+      </div>
+      <p class="copied" id="cmd-status" role="status" hidden></p>
+      <p style="font-size:15px;color:var(--muted)">Then ask your assistant: <strong style="color:var(--ink)">"Who should I reconnect with?"</strong></p>
+    </div>
+
+    <div class="panel" aria-label="Example reconnect list">
+      <div class="panel-head"><span class="kicker">Reconnect · from your review</span><span class="tag">Example</span></div>
+      <div class="rc"><div class="top"><span class="who">Theo Hale</span><span class="quiet">quiet since 2019</span></div><p>Your co-founder's first hire. Four years of near-daily email, then he moved to Lisbon.</p></div>
+      <div class="rc"><div class="top"><span class="who">Priya Raman</span><span class="quiet">quiet since 2021</span></div><p>Ran the 2018 pilot with you. Just started a new company, per her signature.</p></div>
+      <div class="rc"><div class="top"><span class="who">Elena Ortiz</span><span class="quiet">quiet since 2016</span></div><p>Close friend from the Boston years. You wrote each other every few weeks for four years.</p></div>
+      <div class="rc"><div class="top"><span class="who">Marcus Webb</span><span class="quiet">quiet since 2020</span></div><p>Your first board observer. Long threads about hiring, then nothing.</p></div>
+    </div>
+  </header>
+
+  <section class="pain" aria-labelledby="pain-h">
+    <div class="kicker">The problem</div>
+    <h2 id="pain-h">Your address book stopped telling the truth years ago.</h2>
+    <div class="pain-grid">
+      <div class="pain-item"><h3>The people who matter are buried.</h3><p>Five thousand names, and the ones you'd most like to hear from are the ones you haven't written to in years. Scrolling won't find them.</p></div>
+      <div class="pain-item"><h3>It lives in accounts you're losing.</h3><p>The company you left, the one you sold, the one shutting down in March. Each holds a slice of who you know, and the slice goes when the account does.</p></div>
+      <div class="pain-item"><h3>A lot of it is dead.</h3><p>Old work addresses, acquired companies, people who moved on. Nothing tells you which until a note bounces.</p></div>
+    </div>
+  </section>
+
+  <section id="how" style="display:grid;gap:28px" aria-labelledby="how-h">
+    <div class="kicker">How it works</div>
+    <h2 id="how-h">Your AI does the sorting. You do the deciding.</h2>
+    <div class="acts">
+      <div class="act">
+        <span class="kicker">Act one · minutes</span>
+        <h3>Reconnect</h3>
+        <ul>
+          <li>Reads email headers only: who, when, how often. Not what you wrote.</li>
+          <li>Measures relationships by back-and-forth over time, not volume. A friend you wrote 40 times outranks a colleague's 4,000 work emails.</li>
+          <li>Leaves out the transactions (lawyers, vendors, recruiters) and gives you 10 to 15 people worth writing to.</li>
+        </ul>
+      </div>
+      <div class="act">
+        <span class="kicker">Act two · optional</span>
+        <h3>Clean up</h3>
+        <ul>
+          <li>Pulls every account's contacts into one list, in Google's own import format.</li>
+          <li>Removes dead addresses from bounces and "no longer with the company" replies, and keeps the new address when one is given.</li>
+          <li>Folds duplicates only when the names agree too, so an office switchboard never turns ten colleagues into one card.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="demo-wrap">
+      <div style="display:grid;gap:14px;align-content:start">
+        <h3>Anything about a person comes to you, once, in one batch.</h3>
+        <p style="color:var(--muted)">Same person or two? Keep or let go? Family and anyone sensitive stay exactly as you say. Every answer, and every automatic change, goes into a change log with its reason. Try it.</p>
+      </div>
+      <div class="panel" aria-label="Example questions and change log">
+        <div class="panel-head"><span class="kicker">Your questions · 3 of 17</span><span class="tag">Example</span></div>
+        <div class="q"><p><span class="who">Two cards for Priya Raman.</span> Same person?</p><div class="detail">priya@northfieldlabs.com · last seen 2016<br>priya.raman@gmail.com · wrote you March 2026</div><div class="choices"><button class="btn small" data-a="same">Same person</button><button class="btn small ghost" data-a="diff">Different people</button></div><div class="answer" hidden></div></div>
+        <div class="q"><p><span class="who">Marcus Webb.</span> 140 emails in 2019–21, none since. Mostly board threads.</p><div class="choices"><button class="btn small" data-a="keep">Keep</button><button class="btn small ghost" data-a="cut">Let go</button></div><div class="answer" hidden></div></div>
+        <div class="q"><p><span class="who">Elena Ortiz.</span> Close from 2012 to 2016. Quiet for eight years.</p><div class="choices"><button class="btn small" data-a="reconnect">Add to Reconnect</button><button class="btn small ghost" data-a="later">Not now</button></div><div class="answer" hidden></div></div>
+        <div class="log" aria-live="polite"><span class="kicker">Change log</span><ol id="log">
+          <li><span class="t">auto</span><span class="cut">Removed jlee@vantagecorp.com: auto-reply "no longer with the company"</span></li>
+          <li><span class="t">auto</span><span class="add">Added jlee@newco.com: given in that auto-reply</span></li>
+          <li><span class="t">auto</span><span class="add">Merged 2 cards for Tom Abel: same phone, same name</span></li>
+        </ol></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="promises" aria-label="Promises">
+    <div class="promise"><h3>No server of ours</h3><p>It runs inside your own assistant, on files and accounts you connect. We never see your contacts. Your AI provider does, so use one you trust with your email.</p></div>
+    <div class="promise"><h3>Everything on the record</h3><p>Every removal, merge and label is logged with its reason. Your original exports are copied first and never touched.</p></div>
+    <div class="promise"><h3>Nothing you can't undo</h3><p>The import is tested on five contacts first, and Google's Undo changes puts everything back. Nobody gets cut without your say.</p></div>
+  </section>
+
+  <section class="proof" aria-labelledby="proof-h">
+    <div class="kicker">First run</div>
+    <h2 id="proof-h">Twenty years of one founder's contacts, one afternoon.</h2>
+    <div class="figures">
+      <div class="fig"><span class="n">6,375</span><span class="l">people in one list, from three accounts and a spreadsheet</span></div>
+      <div class="fig"><span class="n">1,015</span><span class="l">current relationships his address book had never saved</span></div>
+      <div class="fig"><span class="n">129</span><span class="l">dead addresses removed, with new ones found for some</span></div>
+      <div class="fig"><span class="n">17</span><span class="l">questions he had to answer himself</span></div>
+    </div>
+    <p class="quote">"This actually helped me see my network more clearly. Remembering people from way back to connect with."<cite>Dave Balter, after his first review</cite></p>
+  </section>
+
+  <section class="research" aria-labelledby="research-h">
+    <div class="kicker">Why reconnect</div>
+    <h3 id="research-h">The people you've lost touch with are often the most useful to find again.</h3>
+    <p>In studies of executives who got back in touch with people they hadn't spoken to in years, those conversations took less time than talks with current contacts and were rated as useful or more so. Old ties bring fresh information and still carry trust.</p>
+    <p class="src">Levin, Walter &amp; Murnighan, "Dormant Ties: The Value of Reconnecting," <em>Organization Science</em>, 2011.</p>
+  </section>
+
+  <section class="get" id="get" aria-labelledby="get-h">
+    <div class="card">
+      <div class="kicker">Free, open source</div>
+      <h2 id="get-h">Get it</h2>
+      <div class="install" role="group" aria-label="Install command"><code>npx skills add quaiint/quaiint</code><button class="btn" type="button" data-copy="npx skills add quaiint/quaiint">Copy</button></div>
+      <p>Or download it from <a href="https://github.com/quaiint/quaiint">GitHub</a> and put the <code>network-review</code> folder in your assistant's skills folder.</p>
+      <div class="works" aria-label="Works with"><span>Claude Code</span><span>Claude desktop</span><span>Codex</span><span>Cursor</span><span>Gemini CLI</span><span>any Agent Skills tool</span></div>
+      <p style="font-size:15px;color:var(--muted)">For the reconnect list it needs your email history: an email connector in your assistant, or a mailbox export from Google Takeout. For the cleanup, your contact exports. It runs a little Python on your machine; nothing is uploaded.</p>
+    </div>
+
+    <div class="card" id="run-it-with-us">
+      <div class="kicker">Run it with us</div>
+      <h2>Going through a change?</h2>
+      <p>Leaving a company, selling one, losing an old account? We'll run your first review with you. Free while we learn.</p>
+      <form id="signup" hidden novalidate>
+        <label for="email">Email<input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+        <label for="situation">What's changing
+          <select id="situation" name="situation">
+            <option value="leaving">Leaving or left a company</option>
+            <option value="account">An old account is shutting down</option>
+            <option value="sold">Sold or wound down a company</option>
+            <option value="overdue">Nothing. It's just overdue</option>
+          </select>
+        </label>
+        <label for="note">Anything we should know <span style="font-weight:400;color:var(--muted)">(optional)</span><textarea id="note" name="note" maxlength="600"></textarea></label>
+        <input type="text" name="company" id="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+        <button class="btn" type="submit" id="submit">Ask for a review</button>
+        <p class="form-note">One reply, about your review. Nothing else.</p>
+      </form>
+      <div class="contact" id="contact-fallback">
+        <p>Write with what's changing and roughly how many accounts you have. One reply, about your review.</p>
+        <div class="addr-row"><code class="addr" id="addr">davebalter@gmail.com</code><button class="btn small" type="button" data-copy-el="addr">Copy address</button></div>
+      </div>
+      <p class="status" id="status" role="status" hidden></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="faq-h" style="display:grid;gap:20px">
+    <h2 id="faq-h">Questions</h2>
+    <div class="faq">
+      <div><h3>Do you see my contacts or email?</h3><p>No. There's no Quaiint server. Everything goes between you, your assistant and your accounts. Your AI provider sees what you give your assistant.</p></div>
+      <div><h3>Does it read my emails?</h3><p>Only the headers: who, to whom, when. It asks before using subject lines, and never reads message bodies unless you ask.</p></div>
+      <div><h3>Can it delete people?</h3><p>No. It removes dead addresses and logs each one. Cutting a person is always your call, and the import is yours to click.</p></div>
+      <div><h3>What does it cost?</h3><p>The skill is free and open source. Your assistant's normal usage applies.</p></div>
+      <div><h3>How often should I run it?</h3><p>Once a quarter: a fresh reconnect list, and a list that stays current.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Quaiint · made by Dave Balter, who ran it on his own contacts first</span>
+    <span><a href="https://github.com/quaiint/quaiint">GitHub</a> · MIT license</span>
+  </footer>
+</div>
+<script>
+(function () {
+  function copyText(text, statusEl, label) {
+    var done = function (m) { if (statusEl) { statusEl.textContent = m; statusEl.hidden = false; } };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done('Copied ' + (label || text)); }, function () { done('Select it and press Cmd+C (or Ctrl+C)'); });
+    } else { done('Select it and press Cmd+C (or Ctrl+C)'); }
+  }
+  var status = document.getElementById('status'), cmdStatus = document.getElementById('cmd-status');
+  document.getElementById('copy-cmd').addEventListener('click', function () { copyText(document.getElementById('cmd').textContent, cmdStatus); });
+  document.querySelectorAll('[data-copy]').forEach(function (b) { b.addEventListener('click', function () { copyText(b.getAttribute('data-copy'), status); }); });
+  document.querySelectorAll('[data-copy-el]').forEach(function (b) { b.addEventListener('click', function () { copyText(document.getElementById(b.getAttribute('data-copy-el')).textContent, status); }); });
+
+  var log = document.getElementById('log');
+  var entries = { same: ['add', 'Merged Priya Raman: kept gmail.com, retired northfieldlabs.com (your call)'], diff: ['add', 'Kept two Priya Ramans as different people (your call)'],
+    keep: ['add', 'Kept Marcus Webb, labeled Dormant (your call)'], cut: ['cut', 'Let go of Marcus Webb: won’t be suggested again (your call)'],
+    reconnect: ['add', 'Added Elena Ortiz to your Reconnect list (your call)'], later: ['add', 'Left Elena Ortiz for next quarter (your call)'] };
+  var answerText = { same: 'Same person', diff: 'Different people', keep: 'Kept', cut: 'Let go', reconnect: 'On your Reconnect list', later: 'Not now' };
+  document.querySelectorAll('.q button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var q = b.closest('.q'), a = b.getAttribute('data-a'); q.classList.add('done');
+      var ans = q.querySelector('.answer'); ans.textContent = '✓ ' + answerText[a]; ans.hidden = false;
+      var li = document.createElement('li'), t = document.createElement('span'), m = document.createElement('span');
+      t.className = 't'; t.textContent = 'you'; m.className = entries[a][0]; m.textContent = entries[a][1];
+      li.appendChild(t); li.appendChild(m); log.appendChild(li);
+    });
+  });
+
+  // The request form only works on quaiint.com (it posts to /api/request); elsewhere, show the address.
+  var form = document.getElementById('signup');
+  if (/(^|\.)quaiint\.com$/.test(location.hostname) || location.hostname === 'localhost') {
+    form.hidden = false; document.getElementById('contact-fallback').hidden = true;
+    var src = new URLSearchParams(location.search).get('utm_source') || document.referrer.replace(/^https?:\/\//, '').split('/')[0] || 'direct';
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var email = document.getElementById('email').value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { status.textContent = 'Enter an email address so we can reach you.'; status.className = 'status err'; status.hidden = false; return; }
+      var btn = document.getElementById('submit'); btn.disabled = true;
+      fetch('/api/request', { method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email: email, situation: document.getElementById('situation').value, note: document.getElementById('note').value.trim(),
+                               company: document.getElementById('company').value, source: src }) })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); status.textContent = 'Got it. We’ll write to you about your review.'; status.className = 'status'; status.hidden = false; form.reset(); })
+        .catch(function () { status.textContent = 'That didn’t send. Write to davebalter@gmail.com instead.'; status.className = 'status err'; status.hidden = false; })
+        .finally(function () { btn.disabled = false; });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
