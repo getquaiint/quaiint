@@ -7,8 +7,8 @@
 |---|---|---|
 | 1 | ✅ **quaiint.com** bought on Vercel (10/2) | The site, the form, and the address on every link |
 | 2 | ✅ GitHub org **getquaiint** (10/2; "quaiint" was taken). Public repo `getquaiint/quaiint` (Claude pushes the code once it exists) | `npx skills add getquaiint/quaiint` and skills.sh need a public repo |
-| 3 | Create a **private** repo `getquaiint/leads` and a fine-grained token with Issues read/write on it only | Every "run it with us" request becomes an issue: emailed to you, private, permanent |
-| 4 | New Vercel project from `site/`, add env vars `GITHUB_TOKEN` and `LEADS_REPO=getquaiint/leads`, attach quaiint.com | Claude can do this with the Vercel CLI once you OK it |
+| 3 | ~~Leads repo and token~~ (the "run it with us" option was dropped 10/3; repo and token now unused) | |
+| 4 | ✅ quaiint.com deployed on Vercel (10/2) | |
 | 5 | Run your own reconnect review (`"Who should I reconnect with?"`) and write to 3 people from it | You need a true story before telling one |
 
 ## Days 1–14
@@ -17,7 +17,7 @@
 | 1 (Wed 10/7) | Launch check | Claude runs the evals, a fresh-agent end-to-end test, and a test install from the public repo; flips the davebalter.com footer line on |
 | 1 | LinkedIn feed (7,880 followers) | Launch post in your voice: the afternoon you found 1,015 people your address book never saved and 129 dead addresses. Link in the first comment |
 | 2 (Thu 10/8) | LinkedIn newsletter (327) | One-line P.S. under the issue |
-| 3–5 | Direct | Personal notes to ~20 people you know are mid-transition (left a company, sold one). Offer to run it with them |
+| 3–5 | Direct | Personal notes to ~20 people you know are mid-transition (left a company, sold one), with the link |
 | 4 | skills.sh + GitHub lists | Confirm the skills.sh listing; open PRs to the awesome-claude-skills lists |
 | 6 (Tue 10/13) | Substack (238) + davebalter.com | A Mostly True Story about one reconnection, if it happened and you want to tell it. Footer line on every story page |
 | 8 | Hacker News | "Show HN: an Agent Skill that finds who you've drifted from (no server, full change log)", only if days 1–7 show any pull |
@@ -29,14 +29,14 @@
 | Installs | skills.sh install count; GitHub clones and traffic (the repo's Insights) |
 | Interest | GitHub stars, site visits (Vercel Analytics), visits from the davebalter.com footer (`utm_source=davebalter`) |
 | Completed reviews | Results shared in GitHub Discussions; replies to your notes |
-| Want help | Issues in `getquaiint/leads` |
+| Word of mouth | People who mention it unprompted, replies to your notes |
 
 ## Go / no-go on day 14
-- **Go** (build the done-with-you offer and a price per completed review): **100+ installs, 15+ completed
-  reviews, 5+ requests for help.**
+- **Go** (invest: more sources, a hosted version, a business model): **100+ installs, 15+ completed
+  master lists, 5+ people telling others.**
 - **Iterate** (fix what the feedback says, run two more weeks): installs but few completed reviews. That
   means setup friction.
-- **No-go** (keep it as your own quarterly tool): under 30 installs and no requests.
+- **No-go** (keep it as your own quarterly tool): under 30 installs and no completed lists.
 
 ## Already done (10/2)
 - Skill reworked so the reconnect list comes first, with descriptions written in people's words
