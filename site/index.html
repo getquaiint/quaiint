@@ -197,7 +197,7 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
         </ol></div>
         <div class="q"><p><span class="who">Two cards for Priya Raman.</span> Same person?</p><div class="detail">priya@northfieldlabs.com · last seen 2016<br>priya.raman@gmail.com · wrote you March 2026</div><div class="choices"><button class="btn small" data-a="same">Same person</button><button class="btn small ghost" data-a="diff">Different people</button></div><div class="answer" hidden></div></div>
         <div class="q"><p><span class="who">Marcus Webb.</span> 140 emails in 2019–21, none since. Mostly board threads.</p><div class="choices"><button class="btn small" data-a="keep">Keep</button><button class="btn small ghost" data-a="cut">Let go</button></div><div class="answer" hidden></div></div>
-        <div class="q"><p><span class="who">Elena Ortiz.</span> Close from 2012 to 2016. Quiet for eight years.</p><div class="choices"><button class="btn small" data-a="reconnect">Add to Reconnect</button><button class="btn small ghost" data-a="later">Not now</button></div><div class="answer" hidden></div></div>
+        <div class="q"><p><span class="who">Sam Lee.</span> Every address on file bounced. Keep the card?</p><div class="detail">sam@brightpath.io · bounced 2025<br>slee@kestrelpartners.com · "no longer with the firm"</div><div class="choices"><button class="btn small" data-a="reconnect">Keep, I'll find a new one</button><button class="btn small ghost" data-a="later">Let go</button></div><div class="answer" hidden></div></div>
       </div>
   </header>
 
@@ -340,8 +340,8 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
   var log = document.getElementById('log');
   var entries = { same: ['add', 'Merged Priya Raman: kept gmail.com, retired northfieldlabs.com (your call)'], diff: ['add', 'Kept two Priya Ramans as different people (your call)'],
     keep: ['add', 'Kept Marcus Webb, labeled Dormant (your call)'], cut: ['cut', 'Let go of Marcus Webb: won’t be suggested again (your call)'],
-    reconnect: ['add', 'Added Elena Ortiz to your Reconnect list (your call)'], later: ['add', 'Left Elena Ortiz for next quarter (your call)'] };
-  var answerText = { same: 'Same person', diff: 'Different people', keep: 'Kept', cut: 'Let go', reconnect: 'On your Reconnect list', later: 'Not now' };
+    reconnect: ['add', 'Kept Sam Lee, flagged: no current email (your call)'], later: ['cut', 'Let go of Sam Lee: won\u2019t be re-added (your call)'] };
+  var answerText = { same: 'Same person', diff: 'Different people', keep: 'Kept', cut: 'Let go', reconnect: 'Kept, flagged', later: 'Let go' };
   document.querySelectorAll('.q button').forEach(function (b) {
     b.addEventListener('click', function () {
       var q = b.closest('.q'), a = b.getAttribute('data-a'); q.classList.add('done');
