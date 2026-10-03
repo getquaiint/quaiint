@@ -1,14 +1,15 @@
 # Quaiint
 
-**Find out who you still know.**
+**Clear the dead weight out of your contacts.**
 
-Quaiint is a free [Agent Skill](https://agentskills.io) that runs a network review with the AI assistant
-you already use: Claude, Codex, Cursor, Gemini CLI, or any tool that reads `SKILL.md`.
+Quaiint is a free [Agent Skill](https://agentskills.io) for the AI assistant you already use: Claude,
+Codex, Cursor, Gemini CLI, or any tool that reads `SKILL.md`.
 
-1. **Reconnect.** From your email headers, it finds the people you were close to and have drifted from,
-   and gives you 10–15 worth writing to.
-2. **Clean up** (optional). It turns contacts scattered across old and current accounts into one
-   accurate list: dead addresses gone, duplicates folded, people who moved on flagged.
+1. **Clean up.** Contacts scattered across old and current accounts become one accurate list: dead
+   addresses gone, duplicates folded, people who moved on flagged. Your AI handles what it's sure about
+   and asks you only about the rest: a handful of questions, not thousands of rows.
+2. **Who you've drifted from** (optional). If you connect your email, it also shows the people you were
+   close to and lost touch with.
 
 You decide about people. Every change is logged with a reason, your originals are never modified, and
 the import is tested on five contacts first.
@@ -21,13 +22,13 @@ npx skills add getquaiint/quaiint
 
 Or copy `skills/network-review/` into your assistant's skills folder (Claude Code: `~/.claude/skills/`).
 
-Then say: **"Who should I reconnect with?"** or **"Run a network review."**
+Then say: **"Clean up my contacts."**
 
 ## What it needs
-- **Email headers** for the reconnect list: an email connector in your assistant (e.g. Gmail), or a
-  mailbox export (Google Takeout → Mail → .mbox). Senders, recipients and dates only, never message bodies
-  unless you ask.
 - **Contact exports** for the cleanup: Google Contacts → Export → Google CSV, or vCard from iCloud.
+- **Email headers**, only for the optional drifted-from list: an email connector in your assistant (e.g.
+  Gmail), or a mailbox export (Google Takeout → Mail → .mbox). Senders, recipients and dates only, never
+  message bodies unless you ask.
 - An assistant that can run Python 3 (standard library only). Without one, the skill offers a rougher
   manual version.
 

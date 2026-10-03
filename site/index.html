@@ -76,7 +76,7 @@ p { margin: 0; max-width: 62ch; }
 .q.done { opacity: .55; }
 .q.done .choices { display: none; }
 .q .answer { font: 500 13px var(--mono); color: var(--accent); }
-.log { padding: 14px 18px; background: var(--accent-soft); display: grid; gap: 6px; min-height: 132px; }
+.log { padding: 14px 18px; background: var(--accent-soft); display: grid; gap: 6px; }
 .log .kicker { color: var(--ink); }
 .log ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font: 400 13px/1.5 var(--mono); }
 .log li { display: grid; grid-template-columns: 64px 1fr; gap: 8px; }
@@ -178,75 +178,75 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
   <header class="hero">
     <div class="hero-copy">
       <div class="kicker">A free skill for the AI assistant you already use</div>
-      <h1>Find out who you still know.</h1>
-      <p class="lede">Quaiint reads who you've emailed over the years and finds the people you were close to and drifted from. Then, if you want, it turns contacts scattered across old accounts into one clean list.</p>
+      <h1>Clear the dead weight out of your contacts.</h1>
+      <p class="lede">Quaiint has your AI go through every account you've kept contacts in, find the dead addresses, duplicates and people who moved on, and fix them. It handles what it's sure about and asks you only about the rest: a handful of questions, not thousands of rows.</p>
       <div class="install" role="group" aria-label="Install command">
         <code id="cmd">npx skills add getquaiint/quaiint</code>
         <button class="btn" id="copy-cmd" type="button">Copy</button>
       </div>
       <p class="copied" id="cmd-status" role="status" hidden></p>
-      <p style="font-size:15px;color:var(--muted)">Then ask your assistant: <strong style="color:var(--ink)">"Who should I reconnect with?"</strong></p>
+      <p style="font-size:15px;color:var(--muted)">Then ask your assistant: <strong style="color:var(--ink)">"Clean up my contacts."</strong></p>
     </div>
 
-    <div class="panel" aria-label="Example reconnect list">
-      <div class="panel-head"><span class="kicker">Reconnect · from your review</span><span class="tag">Example</span></div>
-      <div class="rc"><div class="top"><span class="who">Theo Hale</span><span class="quiet">quiet since 2019</span></div><p>Your co-founder's first hire. Four years of near-daily email, then he moved to Lisbon.</p></div>
-      <div class="rc"><div class="top"><span class="who">Priya Raman</span><span class="quiet">quiet since 2021</span></div><p>Ran the 2018 pilot with you. Just started a new company, per her signature.</p></div>
-      <div class="rc"><div class="top"><span class="who">Elena Ortiz</span><span class="quiet">quiet since 2016</span></div><p>Close friend from the Boston years. You wrote each other every few weeks for four years.</p></div>
-      <div class="rc"><div class="top"><span class="who">Marcus Webb</span><span class="quiet">quiet since 2020</span></div><p>Your first board observer. Long threads about hiring, then nothing.</p></div>
-    </div>
+    <div class="panel" aria-label="Example questions and change log">
+        <div class="panel-head"><span class="kicker">Done for you · then 3 questions</span><span class="tag">Example</span></div>
+        <div class="log" aria-live="polite"><span class="kicker">Done automatically</span><ol id="log">
+          <li><span class="t">auto</span><span class="cut">Removed jlee@vantagecorp.com: auto-reply "no longer with the company"</span></li>
+          <li><span class="t">auto</span><span class="add">Added jlee@newco.com: given in that auto-reply</span></li>
+          <li><span class="t">auto</span><span class="add">Merged 2 cards for Tom Abel: same phone, same name</span></li>
+        </ol></div>
+        <div class="q"><p><span class="who">Two cards for Priya Raman.</span> Same person?</p><div class="detail">priya@northfieldlabs.com · last seen 2016<br>priya.raman@gmail.com · wrote you March 2026</div><div class="choices"><button class="btn small" data-a="same">Same person</button><button class="btn small ghost" data-a="diff">Different people</button></div><div class="answer" hidden></div></div>
+        <div class="q"><p><span class="who">Marcus Webb.</span> 140 emails in 2019–21, none since. Mostly board threads.</p><div class="choices"><button class="btn small" data-a="keep">Keep</button><button class="btn small ghost" data-a="cut">Let go</button></div><div class="answer" hidden></div></div>
+        <div class="q"><p><span class="who">Elena Ortiz.</span> Close from 2012 to 2016. Quiet for eight years.</p><div class="choices"><button class="btn small" data-a="reconnect">Add to Reconnect</button><button class="btn small ghost" data-a="later">Not now</button></div><div class="answer" hidden></div></div>
+      </div>
   </header>
 
   <section class="pain" aria-labelledby="pain-h">
     <div class="kicker">The problem</div>
     <h2 id="pain-h">Your address book stopped telling the truth years ago.</h2>
     <div class="pain-grid">
-      <div class="pain-item"><h3>The people who matter are buried.</h3><p>Five thousand names, and the ones you'd most like to hear from are the ones you haven't written to in years. Scrolling won't find them.</p></div>
-      <div class="pain-item"><h3>It lives in accounts you're losing.</h3><p>The company you left, the one you sold, the one shutting down in March. Each holds a slice of who you know, and the slice goes when the account does.</p></div>
       <div class="pain-item"><h3>A lot of it is dead.</h3><p>Old work addresses, acquired companies, people who moved on. Nothing tells you which until a note bounces.</p></div>
+      <div class="pain-item"><h3>It lives in accounts you're losing.</h3><p>The company you left, the one you sold, the one shutting down in March. Each holds a slice of who you know, and the slice goes when the account does.</p></div>
+      <div class="pain-item"><h3>The people who matter are buried.</h3><p>Five thousand names, and the ones you'd most like to hear from are the ones you haven't written to in years. Scrolling won't find them.</p></div>
     </div>
   </section>
 
   <section id="how" style="display:grid;gap:28px" aria-labelledby="how-h">
     <div class="kicker">How it works</div>
-    <h2 id="how-h">Your AI does the sorting. You do the deciding.</h2>
+    <h2 id="how-h">Your AI does the work. You confirm the few it can't be sure of.</h2>
     <div class="acts">
       <div class="act">
-        <span class="kicker">Act one · minutes</span>
-        <h3>Reconnect</h3>
-        <ul>
-          <li>Reads email headers only: who, when, how often. Not what you wrote.</li>
-          <li>Measures relationships by back-and-forth over time, not volume. A friend you wrote 40 times outranks a colleague's 4,000 work emails.</li>
-          <li>Leaves out the transactions (lawyers, vendors, recruiters) and gives you 10 to 15 people worth writing to.</li>
-        </ul>
-      </div>
-      <div class="act">
-        <span class="kicker">Act two · optional</span>
-        <h3>Clean up</h3>
+        <span class="kicker">The cleanup · mostly automatic</span>
+        <h3>One clean list</h3>
         <ul>
           <li>Pulls every account's contacts into one list, in Google's own import format.</li>
           <li>Removes dead addresses from bounces and "no longer with the company" replies, and keeps the new address when one is given.</li>
           <li>Folds duplicates only when the names agree too, so an office switchboard never turns ten colleagues into one card.</li>
         </ul>
       </div>
+      <div class="act">
+        <span class="kicker">Bonus · from your email</span>
+        <h3>Who you've drifted from</h3>
+        <ul>
+          <li>Reads email headers only: who, when, how often. Not what you wrote.</li>
+          <li>Measures relationships by back-and-forth over time, not volume. A friend you wrote 40 times outranks a colleague's 4,000 work emails.</li>
+          <li>Leaves out the transactions (lawyers, vendors, recruiters) and shows you the people you were close to and lost touch with. Yours to act on or not.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="demo-wrap">
       <div style="display:grid;gap:14px;align-content:start">
-        <h3>Anything about a person comes to you, once, in one batch.</h3>
-        <p style="color:var(--muted)">Same person or two? Keep or let go? Family and anyone sensitive stay exactly as you say. Every answer, and every automatic change, goes into a change log with its reason. Try it.</p>
+        <h3>And who you've drifted from, while it's at it.</h3>
+        <p style="color:var(--muted)">If you connect your email, it also notices the people you were close to and haven't written to in years. No homework: just a list, if you want it.</p>
       </div>
-      <div class="panel" aria-label="Example questions and change log">
-        <div class="panel-head"><span class="kicker">Your questions · 3 of 17</span><span class="tag">Example</span></div>
-        <div class="q"><p><span class="who">Two cards for Priya Raman.</span> Same person?</p><div class="detail">priya@northfieldlabs.com · last seen 2016<br>priya.raman@gmail.com · wrote you March 2026</div><div class="choices"><button class="btn small" data-a="same">Same person</button><button class="btn small ghost" data-a="diff">Different people</button></div><div class="answer" hidden></div></div>
-        <div class="q"><p><span class="who">Marcus Webb.</span> 140 emails in 2019–21, none since. Mostly board threads.</p><div class="choices"><button class="btn small" data-a="keep">Keep</button><button class="btn small ghost" data-a="cut">Let go</button></div><div class="answer" hidden></div></div>
-        <div class="q"><p><span class="who">Elena Ortiz.</span> Close from 2012 to 2016. Quiet for eight years.</p><div class="choices"><button class="btn small" data-a="reconnect">Add to Reconnect</button><button class="btn small ghost" data-a="later">Not now</button></div><div class="answer" hidden></div></div>
-        <div class="log" aria-live="polite"><span class="kicker">Change log</span><ol id="log">
-          <li><span class="t">auto</span><span class="cut">Removed jlee@vantagecorp.com: auto-reply "no longer with the company"</span></li>
-          <li><span class="t">auto</span><span class="add">Added jlee@newco.com: given in that auto-reply</span></li>
-          <li><span class="t">auto</span><span class="add">Merged 2 cards for Tom Abel: same phone, same name</span></li>
-        </ol></div>
-      </div>
+      <div class="panel" aria-label="Example reconnect list">
+      <div class="panel-head"><span class="kicker">Who you've drifted from</span><span class="tag">Example</span></div>
+      <div class="rc"><div class="top"><span class="who">Theo Hale</span><span class="quiet">quiet since 2019</span></div><p>Your co-founder's first hire. Four years of near-daily email, then he moved to Lisbon.</p></div>
+      <div class="rc"><div class="top"><span class="who">Priya Raman</span><span class="quiet">quiet since 2021</span></div><p>Ran the 2018 pilot with you. Just started a new company, per her signature.</p></div>
+      <div class="rc"><div class="top"><span class="who">Elena Ortiz</span><span class="quiet">quiet since 2016</span></div><p>Close friend from the Boston years. You wrote each other every few weeks for four years.</p></div>
+      <div class="rc"><div class="top"><span class="who">Marcus Webb</span><span class="quiet">quiet since 2020</span></div><p>Your first board observer. Long threads about hiring, then nothing.</p></div>
+    </div>
     </div>
   </section>
 
@@ -269,7 +269,7 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
   </section>
 
   <section class="research" aria-labelledby="research-h">
-    <div class="kicker">Why reconnect</div>
+    <div class="kicker">About that bonus</div>
     <h3 id="research-h">The people you've lost touch with are often the most useful to find again.</h3>
     <p>In studies of executives who got back in touch with people they hadn't spoken to in years, those conversations took less time than talks with current contacts and were rated as useful or more so. Old ties bring fresh information and still carry trust.</p>
     <p class="src">Levin, Walter &amp; Murnighan, "Dormant Ties: The Value of Reconnecting," <em>Organization Science</em>, 2011.</p>
@@ -316,7 +316,7 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
     <h2 id="faq-h">Questions</h2>
     <div class="faq">
       <div><h3>Do you see my contacts or email?</h3><p>No. There's no Quaiint server. Everything goes between you, your assistant and your accounts. Your AI provider sees what you give your assistant.</p></div>
-      <div><h3>Does it read my emails?</h3><p>Only the headers: who, to whom, when. It asks before using subject lines, and never reads message bodies unless you ask.</p></div>
+      <div><h3>Does it need my email?</h3><p>Not for the cleanup. For the drifted-from list it reads only the headers: who, to whom, when. It asks before using subject lines, and never reads message bodies unless you ask.</p></div>
       <div><h3>Can it delete people?</h3><p>No. It removes dead addresses and logs each one. Cutting a person is always your call, and the import is yours to click.</p></div>
       <div><h3>What does it cost?</h3><p>The skill is free and open source. Your assistant's normal usage applies.</p></div>
       <div><h3>How often should I run it?</h3><p>Once a quarter: a fresh reconnect list, and a list that stays current.</p></div>
