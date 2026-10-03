@@ -1,22 +1,26 @@
 ---
 name: network-review
 description: >-
-  Cleans up a person's contacts across every account they've kept them in: removes dead addresses,
-  folds duplicates, flags people who moved on, and produces one clean list in Google's import format,
-  asking the person only about the few cases it can't be sure of. Optionally shows who they've drifted
+  Builds one master contact list from everywhere a person keeps contacts (several email accounts, old
+  work accounts, LinkedIn, newsletter subscriber lists, phone, spreadsheets), clears out dead addresses
+  and duplicates, and gives it structure: who they're in touch with, who subscribes, who never to email.
+  Asks the person only about the few cases it can't be sure of. Optionally shows who they've drifted
   from, using email headers. Use when someone says things like "clean up my contacts", "I'm about to
   email my whole network", "clean my list before I send a newsletter / announcement", "my contacts are a mess", "duplicate contacts", "merge my contacts", "remove dead email addresses", "I'm leaving my job
   / my company", "I'm losing access to my work email", "export my contacts before my account closes",
-  "who have I lost touch with", or asks for a network review. Works from contact exports and email headers;
+  "put all my contacts in one place", "combine my LinkedIn and Gmail contacts", "build a do-not-email
+  list", "who have I lost touch with", or asks for a network review. Works from contact exports and email headers;
   the person decides about people, and every change is logged and reversible.
 ---
 
 # Network review (Quaiint)
 
-You clear the dead weight out of one person's contacts, doing nearly all of the work yourself, so
-they only confirm the few cases you can't be sure of. Two parts:
+You build one person a master list of everyone they know, from every place they keep contacts, clean
+and structured, doing nearly all of the work yourself so they only confirm the few cases you can't be
+sure of. Two parts:
 
-1. **Clean up** (the job): one accurate list across every account, mostly automatic.
+1. **The master list** (the job): every source in, dead weight out, structure on (Still in touch,
+   Subscriber, LinkedIn, Do not email), mostly automatic.
 2. **Drifted from** (the bonus, if they connect email): the people they were close to and lost
    touch with. Offer it; don't push it.
 
@@ -34,20 +38,29 @@ say so and offer the manual version in `references/no-code.md`.
 
 ## Part 1: Clean up
 
-1. **Gather.** Ask which accounts they use, which are going away, and which company domains are dead.
-   For each account: contacts.google.com → Export → **Google CSV** (iCloud: vCard). Ask them to paste or
-   export bounce notices and "no longer with" auto-replies if they have them.
+1. **Gather every source.** Ask where they keep contacts, which accounts are going away, and which
+   company domains are dead. Then help them export each one (exact clicks in `references/sources.md`):
+   - every Google account: contacts.google.com → Export → **Google CSV**; iPhone/iCloud: vCard
+   - LinkedIn: Settings → Data privacy → Get a copy of your data → **Connections**
+   - newsletters: the subscriber export from Substack, Buttondown, Mailchimp, beehiiv, Kit
+   - any spreadsheet of people (save as CSV)
+   - bounce notices and "no longer with" auto-replies, pasted into a text file
+   - anyone who must never be emailed (asked out, family, sensitive): one address per line
 2. **Build.**
    ```
    python3 scripts/contacts.py build --in EXPORT_FILES_OR_FOLDER --out cleanup/ \
        [--bounces pasted.txt] [--relationships review/relationships.csv] \
        [--me THEIR@ADDRESSES] [--dead-domain oldco.com]
    ```
+   Google CSV and vCard are read natively; any other CSV (LinkedIn, newsletters, spreadsheets) is
+   recognized by its columns and labeled by source (name it with `Label=file.csv` if the filename doesn't
+   say). Unsubscribed or undeliverable newsletter rows go on the do-not-email list, never into a mailing.
    It backs up the originals, folds duplicate cards into people (a shared email or phone **and** names
    that agree), removes dead and automated addresses, adds forwarding addresses from auto-replies,
    labels Still in touch / Dormant (and asks when a name in the email history matches a card with a
    different address), writes the import in Google's exact format, a 5-contact test file,
-   `change-log.csv`, `questions.md` and `summary.json`.
+   `change-log.csv`, `questions.md`, `summary.json`, `do-not-email.csv` (people and dead addresses, with
+   reasons: use it as a suppression list for any mailing) and `lists/` (one CSV per segment).
 3. **Ask, once.** Turn `questions.md` into one short message. Add anyone sensitive you noticed (family,
    someone who has died, someone who asked to be left alone) and ask what they want. Never guess.
 4. **Apply their answers** by writing `decisions.json` (format: `references/decisions.md`) and running

@@ -32,7 +32,8 @@ check('signals: dormant friend tops reconnect candidates', cands[:1] == ['Theo H
 
 # ---- contacts
 cmd = [sys.executable, os.path.join(SCRIPTS, 'contacts.py'), 'build', '--in', os.path.join(FX, 'exports'),
-       '--bounces', os.path.join(FX, 'bounces.txt'), '--relationships', os.path.join(out, 'relationships.csv'), '--out', out]
+       '--bounces', os.path.join(FX, 'bounces.txt'), '--relationships', os.path.join(out, 'relationships.csv'),
+       '--do-not-email', os.path.join(FX, 'do-not-email.txt'), '--out', out]
 b = subprocess.run(cmd, capture_output=True, text=True)
 check('contacts runs', b.returncode == 0, b.stderr[-300:])
 summary = json.load(open(os.path.join(out, 'summary.json'))) if b.returncode == 0 else {}
@@ -56,6 +57,20 @@ check('automated senders removed', not (set(T['automated']) & all_emails))
 check('dead addresses removed', not (set(T['dead']) & all_emails), str(sorted(set(T['dead']) & all_emails)))
 check('forwarding addresses added', set(T['forwards'].values()) <= all_emails)
 check('vCard: new person added', T['vcf_new_person'] in named)
+LI = T['linkedin']; NL = T['newsletters']
+lab = lambda n: named.get(n, [{}])[0].get('Labels', '')
+check('LinkedIn: preamble skipped, rows read', summary.get('sources', {}).get('LinkedIn') == 4, str(summary.get('sources')))
+check('LinkedIn: connection with email joins the existing person', len(named.get(LI['attached_by_email'], [])) == 1 and 'LinkedIn' in lab(LI['attached_by_email']))
+check('LinkedIn: no-email connection attaches when name and company agree', len(named.get(LI['attached_by_name_company'], [])) == 1 and 'LinkedIn' in lab(LI['attached_by_name_company']))
+check('LinkedIn: new connections added', all(n in named for n in LI['new_people']))
+check('newsletter: active subscriber labeled', 'Newsletter: Substack' in lab(NL['active']))
+dne = list(csv.DictReader(open(os.path.join(out, 'do-not-email.csv')))) if b.returncode == 0 else []
+dne_emails = {e.strip() for r in dne for e in r['email'].split(';')}
+check('newsletter: unsubscribes go on the do-not-email list', set(NL['unsubscribed']) <= dne_emails)
+check('do-not-email file applied', NL['dne_file'] in dne_emails)
+check('dead addresses also on the do-not-email list', set(T['dead'][:3]) <= dne_emails)
+check('new subscribers added as people', set(NL['new_subscribers']) <= all_emails)
+check('segment lists written', all(os.path.exists(os.path.join(out, 'lists', f)) for f in ('do-not-email.csv', 'linkedin.csv', 'newsletter-substack.csv')))
 check('vCard: existing person merged, not duplicated', len(named.get(T['vcf_existing_person'], [])) == 1)
 check('no-current-email people kept and asked about', summary.get('no_current_email') == 12 and 'No current email' in q)
 check('import labels dropped, * myContacts kept', all('Imported' not in r['Labels'] and '* myContacts' in r['Labels'] for r in rows))

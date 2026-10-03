@@ -1,13 +1,15 @@
 # Quaiint
 
-**Clear the dead weight out of your contacts.**
+**Every contact you have, in one list you can trust.**
 
 Quaiint is a free [Agent Skill](https://agentskills.io) for the AI assistant you already use: Claude,
 Codex, Cursor, Gemini CLI, or any tool that reads `SKILL.md`.
 
-1. **Clean up.** Contacts scattered across old and current accounts become one accurate list: dead
-   addresses gone, duplicates folded, people who moved on flagged. Your AI handles what it's sure about
-   and asks you only about the rest: a handful of questions, not thousands of rows.
+1. **One master list.** Contacts from every email account (old jobs included), LinkedIn, your newsletter
+   subscribers, your phone and your spreadsheets become one list: dead addresses gone, duplicates folded,
+   people who moved on flagged, and structure on top (still in touch, subscriber, LinkedIn, **do not
+   email**). Your AI handles what it's sure about and asks you only about the rest: a handful of
+   questions, not thousands of rows.
 2. **Who you've drifted from** (optional). If you connect your email, it also shows the people you were
    close to and lost touch with.
 
@@ -25,7 +27,8 @@ Or copy `skills/network-review/` into your assistant's skills folder (Claude Cod
 Then say: **"Clean up my contacts."**
 
 ## What it needs
-- **Contact exports** for the cleanup: Google Contacts → Export → Google CSV, or vCard from iCloud.
+- **Exports** from wherever you keep contacts: Google (each account), iCloud, LinkedIn, Substack,
+  Buttondown, Mailchimp, any CRM or spreadsheet. Clicks for each: `references/sources.md`.
 - **Email headers**, only for the optional drifted-from list: an email connector in your assistant (e.g.
   Gmail), or a mailbox export (Google Takeout → Mail → .mbox). Senders, recipients and dates only, never
   message bodies unless you ask.
@@ -59,7 +62,7 @@ These are real ones, from the first run:
 ```
 python3 evals/run_evals.py
 ```
-26 checks across both scripts. See `evals/README.md` for the end-to-end test with a fresh agent.
+38 checks across both scripts. See `evals/README.md` for the end-to-end test with a fresh agent.
 
 ## Share how it went
 Numbers only, never contacts: [Discussions](https://github.com/getquaiint/quaiint/discussions).

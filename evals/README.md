@@ -2,7 +2,7 @@
 
 ## Script checks (every change)
 `python3 evals/run_evals.py` rebuilds the fixtures (fake exports, pasted bounces, email headers, each
-seeded with a known trap) and checks both scripts against `fixtures/truth.json`. All 26 must pass.
+seeded with a known trap) and checks both scripts against `fixtures/truth.json`. All 38 must pass.
 
 ## End-to-end with a fresh agent (before each release)
 Give a fresh agent session nothing but the skill folder and `evals/fixtures/`, and say:

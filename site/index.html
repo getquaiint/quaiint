@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Quaiint is a free skill for your AI assistant that finds the people you were close to and drifted from, then cleans up your contacts across every account. You decide; every change is logged.">
-<meta property="og:title" content="Quaiint: find out who you still know">
-<meta property="og:description" content="A free AI skill that finds the people you've drifted from and cleans up your contacts. No server, full change log, you decide.">
+<meta name="description" content="Quaiint is a free skill for your AI assistant that builds one master list of everyone you know, from every email account, LinkedIn, your newsletters and your phone. Dead weight out, do-not-email list in. You confirm the few it isn't sure about.">
+<meta property="og:title" content="Quaiint: every contact you have, in one list you can trust">
+<meta property="og:description" content="A free AI skill: every email account, LinkedIn, newsletters and phone in one master list, with a do-not-email list. No server, full change log, you decide.">
 <title>Quaiint</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -169,6 +169,8 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
 
 <style>
 .hero h1 { font-size: clamp(36px, 5.6vw, 60px); }
+.srcs { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 18px; border-bottom: 1px solid var(--rule); }
+.srcs span { font: 500 12px var(--mono); border: 1px solid var(--rule); border-radius: 99px; padding: 4px 9px; color: var(--muted); }
 .moments { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .moments span.m { font: 500 14px var(--body); background: var(--surface); border: 1px solid var(--rule); border-radius: 99px; padding: 8px 14px; }
 .moments .lead { font: 500 13px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
@@ -196,21 +198,23 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
   <header class="hero">
     <div class="hero-copy">
       <div class="kicker">A free skill for your AI assistant</div>
-      <h1>Before you email everyone you know, clear out the dead weight.</h1>
-      <p class="lede">Your AI cleans every account you've kept contacts in. It fixes what it's sure of, asks you about the rest, then shows you who you've drifted from.</p>
+      <h1>Every contact you have, in one list you can trust.</h1>
+      <p class="lede">Old work accounts, personal email, LinkedIn, your newsletter, your phone. Your AI pulls them into one master list, clears out the dead weight, and sorts everyone: who you're in touch with, who subscribes, who never to email. You confirm the few it isn't sure about.</p>
       <div class="install" role="group" aria-label="Install command">
         <code id="cmd">npx skills add getquaiint/quaiint</code>
         <button class="btn" id="copy-cmd" type="button">Copy</button>
       </div>
       <p class="copied" id="cmd-status" role="status" hidden></p>
-      <p class="small-link" style="color:var(--muted)">Then tell your assistant <strong style="color:var(--ink)">"Clean up my contacts."</strong> Not a terminal person? <a href="#get">We'll run it with you →</a></p>
+      <p class="small-link" style="color:var(--muted)">Then tell your assistant <strong style="color:var(--ink)">"Build my master contact list."</strong> Not a terminal person? <a href="#get">We'll run it with you →</a></p>
     </div>
     <div class="panel" aria-label="Example questions and change log">
-        <div class="panel-head"><span class="kicker">Done for you · then 3 questions</span><span class="tag">Example</span></div>
+        <div class="panel-head"><span class="kicker">Your master list · being built</span><span class="tag">Example</span></div>
+        <div class="srcs" aria-label="Sources"><span>Gmail</span><span>Old work account</span><span>LinkedIn</span><span>Substack</span><span>iPhone</span><span>Spreadsheet</span></div>
         <div class="log" aria-live="polite"><span class="kicker">Done automatically</span><ol id="log">
           <li><span class="t">auto</span><span class="cut">Removed jlee@vantagecorp.com: auto-reply "no longer with the company"</span></li>
           <li><span class="t">auto</span><span class="add">Added jlee@newco.com: given in that auto-reply</span></li>
           <li><span class="t">auto</span><span class="add">Merged 2 cards for Tom Abel: same phone, same name</span></li>
+          <li><span class="t">auto</span><span class="cut">Do not email: rkim@fastmail.com unsubscribed on Substack</span></li>
         </ol></div>
         <div class="q"><p><span class="who">Two cards for Priya Raman.</span> Same person?</p><div class="detail">priya@northfieldlabs.com · last seen 2016<br>priya.raman@gmail.com · wrote you March 2026</div><div class="choices"><button class="btn small" data-a="same">Same person</button><button class="btn small ghost" data-a="diff">Different people</button></div><div class="answer" hidden></div></div>
         <div class="q"><p><span class="who">Marcus Webb.</span> 140 emails in 2019–21, none since. Mostly board threads.</p><div class="choices"><button class="btn small" data-a="keep">Keep</button><button class="btn small ghost" data-a="cut">Let go</button></div><div class="answer" hidden></div></div>
@@ -223,6 +227,7 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
     <span class="m">You're about to email your whole network</span>
     <span class="m">You're leaving a job</span>
     <span class="m">An old account is about to shut down</span>
+    <span class="m">You just want one list</span>
   </section>
 
   <section id="vs" style="display:grid;gap:18px" aria-labelledby="vs-h">
@@ -232,10 +237,11 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
         <thead><tr><th></th><th class="c">Google</th><th class="c">Quaiint</th></tr></thead>
         <tbody>
           <tr><td>Merge duplicates in one account</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
-          <tr class="hi"><td>Clean every account at once, old jobs included</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+          <tr class="hi"><td>Pull in every account, old jobs included</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+          <tr class="hi"><td>Pull in LinkedIn, newsletter subscribers and spreadsheets</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+          <tr class="hi"><td>Keep one do-not-email list across all of it</td><td class="c no">–</td><td class="c yes">✓</td></tr>
           <tr class="hi"><td>Find dead addresses from bounces and "no longer with the company" replies</td><td class="c no">–</td><td class="c yes">✓</td></tr>
-          <tr class="hi"><td>Swap in someone's new address when an auto-reply gives it</td><td class="c no">–</td><td class="c yes">✓</td></tr>
-          <tr class="hi"><td>Ask before treating two people with the same name as one</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+                    <tr class="hi"><td>Ask before treating two people with the same name as one</td><td class="c no">–</td><td class="c yes">✓</td></tr>
           <tr class="hi"><td>Log every change with its reason</td><td class="c no">–</td><td class="c yes">✓</td></tr>
           <tr class="hi"><td>Show who you've drifted from</td><td class="c no">–</td><td class="c yes">✓</td></tr>
         </tbody>
@@ -244,10 +250,10 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
   </section>
 
   <section class="proof" aria-label="First run">
-    <p class="quote">"I was about to email my whole network and one address in twenty was dead. It cleaned up twenty years of contacts in an afternoon, asked me 17 questions, and reminded me of people I'd lost touch with."<cite>A 30-year executive</cite></p>
+    <p class="quote">"My contacts were spread across three email accounts, LinkedIn, two newsletters and a spreadsheet. Now there's one master list, a do-not-email list, and I can see who's actually in my life. It took an afternoon and 17 questions."<cite>A 30-year executive</cite></p>
     <div class="figures">
-      <div class="fig"><span class="n">6,375</span><span class="l">people, from three accounts into one list</span></div>
-      <div class="fig"><span class="n">129</span><span class="l">dead addresses removed</span></div>
+      <div class="fig"><span class="n">6,375</span><span class="l">people in one master list, from seven sources</span></div>
+      <div class="fig"><span class="n">129</span><span class="l">dead addresses cleared out</span></div>
       <div class="fig"><span class="n">1,015</span><span class="l">current contacts his address book never saved</span></div>
       <div class="fig"><span class="n">17</span><span class="l">questions he answered. The AI handled the rest.</span></div>
     </div>
@@ -259,19 +265,20 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
       <div class="card">
         <div class="kicker">If you use an AI coding assistant</div>
         <h3>Run it yourself in minutes</h3>
-        <p style="color:var(--muted);font-size:15px">Claude Code, Codex, Cursor, Gemini CLI or any tool that reads Agent Skills. Export your contacts from each account, then ask.</p>
+        <p style="color:var(--muted);font-size:15px">Claude Code, Codex, Cursor, Gemini CLI or any tool that reads Agent Skills. Export from each place you keep contacts (it tells you how), then ask.</p>
         <div class="install" role="group" aria-label="Install command"><code>npx skills add getquaiint/quaiint</code><button class="btn" type="button" data-copy="npx skills add getquaiint/quaiint">Copy</button></div>
         <p style="font-size:14px;color:var(--muted)">No server: it runs on your machine through your assistant. Your AI provider sees what you share with it. <a href="https://github.com/getquaiint/quaiint">Code on GitHub</a>.</p>
       </div>
       <div class="card" id="run-it-with-us">
         <div class="kicker">If you don't</div>
         <h3>We'll run it with you</h3>
-        <p style="color:var(--muted);font-size:15px">Leaving a company, selling one, about to email everyone? Tell us, and we'll do your first cleanup together.</p>
+        <p style="color:var(--muted);font-size:15px">Leaving a company, about to email everyone, or just want one list? Tell us, and we'll build your master list together.</p>
         <form id="signup" hidden novalidate>
           <label for="email">Email<input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
           <label for="situation">What's happening
             <select id="situation" name="situation">
-              <option value="overdue">About to email my network</option>
+              <option value="overdue">I want one master list</option>
+              <option value="emailing">About to email my network</option>
               <option value="leaving">Leaving or left a company</option>
               <option value="account">An old account is shutting down</option>
               <option value="sold">Sold or wound down a company</option>

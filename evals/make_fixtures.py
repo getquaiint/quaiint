@@ -78,6 +78,34 @@ with open(os.path.join(FX, 'bounces.txt'), 'w') as f:
         u = d.split('@')[0]
         f.write(f'Automatic reply from {d}: "{u.replace(".", " ").title()} is no longer with the company. Please contact {u}@newco.com"\n')
 
+# trap 7: LinkedIn export (notes above the header; most rows have no email)
+li = ['Notes:', '"When exporting your connection data, you may notice that some of the email addresses are missing."', '',
+      'First Name,Last Name,URL,Email Address,Company,Position,Connected On']
+fn, ln, co = people[80]
+li.append(f'{fn},{ln},https://www.linkedin.com/in/{fn.lower()}{ln.lower()},{email(fn, ln, co)},{co.split(".")[0].title()},VP Sales,04 Mar 2015')
+fn, ln, co = people[81]          # no email, same name and company as an existing card: should attach
+li.append(f'{fn},{ln},https://www.linkedin.com/in/{fn.lower()}-{ln.lower()},,{co.split(".")[0].title()},Director,12 Jan 2019')
+li.append('Juno,Okafor,https://www.linkedin.com/in/junookafor,,Stripe,Engineer,02 Feb 2024')   # new, no email
+li.append('Remy,Laurent,https://www.linkedin.com/in/remylaurent,remy@laurent.studio,Laurent Studio,Founder,09 Sep 2022')
+open(os.path.join(FX, 'exports', 'Connections.csv'), 'w').write('\n'.join(li) + '\n')
+truth['linkedin'] = {'attached_by_email': f'{people[80][0]} {people[80][1]}', 'attached_by_name_company': f'{people[81][0]} {people[81][1]}',
+                     'new_people': ['Juno Okafor', 'Remy Laurent']}
+# trap 8: newsletter exports with subscription status
+fn, ln, co = people[90]; fn2, ln2, co2 = people[91]
+open(os.path.join(FX, 'exports', 'substack-subscribers.csv'), 'w').write(
+    'email,name,active_subscription,email_disabled,subscription_created_at\n'
+    f'{email(fn, ln, co)},{fn} {ln},true,false,2026-01-02\n'
+    f'{email(fn2, ln2, co2)},{fn2} {ln2},false,true,2025-06-01\n'
+    'newreader@fastmail.com,New Reader,true,false,2026-09-30\n')
+fn3, ln3, co3 = people[92]
+open(os.path.join(FX, 'exports', 'buttondown-export.csv'), 'w').write(
+    'email,subscriber_type,creation_date\n'
+    f'{email(fn3, ln3, co3)},unsubscribed,2024-02-02\n'
+    'reader2@proton.me,regular,2025-03-03\n')
+open(os.path.join(FX, 'do-not-email.txt'), 'w').write('# people who asked\nasked.out@example.org  # asked to be removed\n' + f'{email(*people[93])}  # family\n')
+truth['newsletters'] = {'active': f'{fn} {ln}', 'unsubscribed': [email(fn2, ln2, co2), email(fn3, ln3, co3)],
+                        'new_subscribers': ['newreader@fastmail.com', 'reader2@proton.me'], 'dne_file': email(*people[93])}
+
 # email headers for signals.py
 me = 'me@example.com'
 H = []

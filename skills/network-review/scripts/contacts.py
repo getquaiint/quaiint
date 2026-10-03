@@ -48,11 +48,11 @@ def letters(s):
 # ---------------------------------------------------------------- reading
 class Card:
     __slots__ = ('first', 'middle', 'last', 'org', 'title', 'birthday', 'notes', 'emails', 'phones',
-                 'addrs', 'sites', 'labels', 'src', 'extra')
+                 'addrs', 'sites', 'labels', 'src', 'extra', 'dne')
     def __init__(self, src):
         self.first = self.middle = self.last = self.org = self.title = self.birthday = ''
         self.notes, self.emails, self.phones, self.addrs, self.sites = [], [], [], [], []
-        self.labels, self.src, self.extra = [], {src}, {}
+        self.labels, self.src, self.extra, self.dne = [], {src}, {}, []
     def name(self):
         return ' '.join(x for x in (self.first, self.last) if x).strip()
     def who(self):
@@ -139,6 +139,90 @@ def read_vcf(path, src):
             for l in val.split(','):
                 add_unique(cur.labels, l.strip())
     return cards
+
+# ---------------------------------------------------------------- any other spreadsheet
+SOURCE_HINTS = [(r'connections', 'LinkedIn'), (r'linkedin', 'LinkedIn'), (r'substack', 'Newsletter: Substack'),
+                (r'buttondown', 'Newsletter: Buttondown'), (r'mailchimp|members_export|subscribed_members', 'Newsletter: Mailchimp'),
+                (r'beehiiv', 'Newsletter: beehiiv'), (r'convertkit|kit_', 'Newsletter: Kit'), (r'hubspot', 'HubSpot')]
+DNE_STATUS = re.compile(r'^(unsubscribed|undeliverable|cleaned|bounced|complained|spam|removed|blocked|inactive|opted.?out)$', re.I)
+TRUE = re.compile(r'^(true|yes|y|1)$', re.I)
+
+def source_label(path, given=None):
+    if given:
+        return given
+    name = os.path.basename(path).lower()
+    for pat, lab in SOURCE_HINTS:
+        if re.search(pat, name):
+            return lab
+    return re.sub(r'[_-]+', ' ', os.path.splitext(os.path.basename(path))[0]).strip().title()
+
+def pick(cols, *pats, avoid=None):
+    for pat in pats:
+        for c in cols:
+            lc = c.strip().lower()
+            if re.search(pat, lc) and not (avoid and re.search(avoid, lc)):
+                return c
+    return None
+
+def read_any_csv(path, src, label):
+    """LinkedIn Connections, newsletter subscriber exports, CRMs, your own spreadsheets: find the header row
+    (LinkedIn puts notes above it), map columns by name, carry subscription status into do-not-email."""
+    rows = list(csv.reader(open(path, encoding='utf-8-sig', errors='ignore', newline='')))
+    def is_header(r, pat):
+        cells = [c.strip() for c in r if c.strip()]
+        return len(cells) >= 2 and all(len(c) <= 40 for c in cells) and any(re.search(pat, c, re.I) for c in cells)
+    hi = next((i for i, r in enumerate(rows[:25]) if is_header(r, r'^(e-?mail|email.?address|user_email)')), None)
+    if hi is None:
+        hi = next((i for i, r in enumerate(rows[:25]) if is_header(r, r'name')), None)
+    if hi is None:
+        return []
+    cols = [c.strip() for c in rows[hi]]
+    col = lambda *p, **k: pick(cols, *p, **k)
+    c_email = col(r'^e-?mail( address)?$', r'^email_address$', r'user_email', r'e-?mail', avoid=r'disabled|opt|consent|verified|status|type|subscri')
+    c_first, c_last = col(r'^first.?name$', r'given'), col(r'^last.?name$', r'surname|family')
+    c_name = col(r'^(full.?)?name$', r'^user_name$', r'display.?name', r'^name\b')
+    c_org, c_title = col(r'^company', r'organi[sz]ation', r'employer'), col(r'^position$', r'title', r'job')
+    c_phone = col(r'phone', r'mobile', r'^cell')
+    c_url = col(r'^url$', r'linkedin', r'profile')
+    c_status = col(r'^subscriber.?type$', r'^status$', r'subscription.?status', r'^type$')
+    c_disabled = col(r'email.?disabled', r'^unsubscribed$', r'opted.?out')
+    c_when = col(r'connected on', r'subscription_created', r'created', r'signup|subscribed.?at|opt.?in.?time')
+    idx = {c: i for i, c in enumerate(cols)}
+    get = lambda r, c: (r[idx[c]].strip() if c and idx[c] < len(r) else '')
+    cards = []
+    for r in rows[hi + 1:]:
+        if not any(x.strip() for x in r):
+            continue
+        c = Card(src)
+        c.first, c.last = get(r, c_first), get(r, c_last)
+        if not (c.first or c.last) and get(r, c_name) and '@' not in get(r, c_name):
+            bits = get(r, c_name).split(); c.first = bits[0]; c.last = ' '.join(bits[1:])
+        for e in EMAIL.findall(get(r, c_email)):
+            add_unique(c.emails, e.lower())
+        if get(r, c_phone): add_unique(c.phones, get(r, c_phone))
+        c.org, c.title = get(r, c_org), get(r, c_title)
+        if get(r, c_url).startswith('http'): add_unique(c.sites, get(r, c_url))
+        st, dis = get(r, c_status), get(r, c_disabled)
+        if (st and DNE_STATUS.match(st)) or (dis and TRUE.match(dis)):
+            c.dne.append(f'{st.lower() if st else "unsubscribed"} on {label.replace("Newsletter: ", "")}')
+        else:
+            add_unique(c.labels, label)
+        if get(r, c_when) and label == 'LinkedIn':
+            add_unique(c.notes, f'Connected on LinkedIn: {get(r, c_when)}')
+        if c.emails or c.first or c.last:
+            cards.append(c)
+    return cards
+
+def read_email_list(paths):
+    out = {}
+    for p in paths or []:
+        for line in open(p, encoding='utf-8', errors='ignore'):
+            if line.lstrip().startswith('#'):
+                continue
+            for e in EMAIL.findall(line):
+                why = line.split('#', 1)[1].strip() if '#' in line else (line.split('(', 1)[1].rstrip(') \n') if '(' in line else 'on your do-not-email list')
+                out[norm(e)] = why or 'on your do-not-email list'
+    return out
 
 # ---------------------------------------------------------------- bounces
 def read_bounces(paths):
@@ -227,6 +311,7 @@ def combine(cs):
         for n in c.notes: add_unique(m.notes, n)
         for l in c.labels: add_unique(m.labels, l)
         for k, v in c.extra.items(): m.extra.setdefault(k, v)
+        for d in c.dne: add_unique(m.dne, d)
     return m
 
 # ---------------------------------------------------------------- writing
@@ -283,12 +368,16 @@ def write_csv(path, hdr, rows):
 def build(a):
     today = datetime.date.today().isoformat()
     os.makedirs(a.out, exist_ok=True)
-    files = []
+    files, given = [], {}
     for p in a.inputs:
+        lab = None
+        if '=' in p and not os.path.exists(p):          # "LinkedIn=Connections.csv" names the source
+            lab, p = p.split('=', 1)
         if os.path.isdir(p):
             files += [os.path.join(p, f) for f in sorted(os.listdir(p)) if f.lower().endswith(('.csv', '.vcf'))]
         else:
             files.append(p)
+            if lab: given[p] = lab
     backup = os.path.join(a.out, f'originals-{today}')
     os.makedirs(backup, exist_ok=True)
     for p in files + list(a.bounces or []):
@@ -296,7 +385,7 @@ def build(a):
         if not os.path.exists(dst):
             shutil.copy2(p, dst)
 
-    base_header, cards, seen = None, [], {}
+    base_header, cards, seen, sources_read = None, [], {}, {}
     for p in files:
         src = os.path.basename(p)
         if p.lower().endswith('.vcf'):
@@ -304,13 +393,20 @@ def build(a):
         else:
             with open(p, encoding='utf-8-sig', newline='') as f:
                 fields = next(csv.reader(f), [])
-            if not is_google_csv(fields):
-                print(f'skipped {src}: not a Google Contacts CSV (export with "Google CSV")', file=sys.stderr)
-                continue
-            fields, cs = read_google_csv(p, src)
-            base_header = base_header or []
-            for k in fields:            # union of every export's columns, in Google's order
-                if k not in base_header: base_header.append(k)
+            if is_google_csv(fields):
+                fields, cs = read_google_csv(p, src)
+                base_header = base_header or []
+                for k in fields:            # union of every export's columns, in Google's order
+                    if k not in base_header: base_header.append(k)
+                if p in given:
+                    for c in cs: add_unique(c.labels, given[p])
+            else:
+                lab = source_label(p, given.get(p))
+                cs = read_any_csv(p, src, lab)
+                if not cs:
+                    print(f'skipped {src}: no email or name column found', file=sys.stderr)
+                    continue
+                sources_read[lab] = sources_read.get(lab, 0) + len(cs)
         for c in cs:                      # identical cards across accounts (a copied address book)
             sig = (c.first, c.last, tuple(sorted(norm(e) for e in c.emails)), tuple(sorted(phone_key(x) for x in c.phones)), c.org)
             if sig in seen:               # same card copied into another account: keep one, lose nothing
@@ -321,6 +417,7 @@ def build(a):
                 for a_ in c.addrs: add_unique(k.addrs, a_)
                 for s_ in c.sites: add_unique(k.sites, s_)
                 k.birthday = k.birthday or c.birthday; k.title = k.title or c.title
+                for d in c.dne: add_unique(k.dne, d)
                 continue
             seen[sig] = c; cards.append(c)
     base_header = base_header or DEFAULT_BASE
@@ -338,6 +435,7 @@ def build(a):
     dec_keep_label = {norm(k): v for k, v in dec.get('labels', {}).items()}
     dec_add = {norm(k): [norm(x) for x in v] for k, v in dec.get('add_addresses', {}).items()}
     dec_untouched = {norm(e) for e in dec.get('leave_untouched', [])}
+    personal_dnc = {norm(k) for k, v in dec.get('labels', {}).items() if any(x in ('Do not contact', 'Do not email') for x in v)}
     dec_different = [{norm(e) for e in grp} for grp in dec.get('different_people', [])]
     dec_same = [{norm(e) for e in grp} for grp in dec.get('same_person', [])]
 
@@ -371,6 +469,25 @@ def build(a):
     for key, grp in by_name.items():
         if len(grp) < 2:
             continue
+        li_only = [p for p in grp if not p.emails and not p.phones and 'LinkedIn' in p.labels]
+        others = [p for p in grp if p not in li_only]
+        if li_only:
+            def co_tokens(p):
+                toks = set(re.findall(r'[a-z]{3,}', (p.org or '').lower()))
+                for e in p.emails: toks |= set(re.findall(r'[a-z]{3,}', e.split('@')[1].split('.')[0]))
+                return toks - {'inc', 'llc', 'the', 'com', 'group', 'company', 'gmail', 'yahoo', 'hotmail', 'outlook', 'icloud'}
+            for li in li_only:
+                match = [o for o in others if co_tokens(li) & co_tokens(o)] if len(others) > 1 else others
+                if len(match) == 1 and (not others[0].org or co_tokens(li) & co_tokens(match[0]) or not li.org):
+                    t = match[0]
+                    for x in li.sites: add_unique(t.sites, x)
+                    for l in li.labels: add_unique(t.labels, l)
+                    for n in li.notes: add_unique(t.notes, n)
+                    t.org = t.org or li.org; t.title = t.title or li.title
+                    people.remove(li); L(t.who(), 'merged', 'LinkedIn connection', 'same name, and the company agrees')
+            grp = [p for p in grp if p in people]
+            if len(grp) < 2 or all(not p.emails and not p.phones for p in grp[1:]):
+                continue
         ids = [{norm(e) for e in p.emails} for p in grp]
         if any(all(i & d for i in ids if i) for d in dec_different):
             continue
@@ -382,7 +499,8 @@ def build(a):
                 for l in t.labels: add_unique(rest[0].labels, l)
                 L(rest[0].who(), 'merged', f'added {t.emails[0]}', 'same full name; that card was only a newer address')
         else:
-            questions['same_name'].append([(p.who(), p.org, '; '.join(p.emails) or '; '.join(p.phones)) for p in grp])
+            questions['same_name'].append([(p.who(), (p.org + (', per LinkedIn' if 'LinkedIn' in p.labels and p.org else '')) if p.org else ('LinkedIn' if 'LinkedIn' in p.labels else ''),
+                                            '; '.join(p.emails) or '; '.join(p.phones) or (p.sites[0] if p.sites else 'no email')) for p in grp])
 
     # 4. addresses: dead, automated, forwarded, the person's removals
     out, letgo, nothing_left = [], [], []
@@ -452,6 +570,24 @@ def build(a):
     if dropped:
         L('(all)', 'dropped labels', f'{dropped} "Imported on …" labels', 'import noise')
     labeled = sum(1 for p in out if 'Still in touch' in p.labels or 'Dormant' in p.labels)
+
+    # do not email: one list across every source
+    extra_dne = read_email_list(a.do_not_email)
+    dne_rows = []
+    for p in out:
+        reasons = list(p.dne)
+        for e in p.emails:
+            if norm(e) in extra_dne: add_unique(reasons, extra_dne[norm(e)])
+            if norm(e) in personal_dnc: add_unique(reasons, 'your call')
+        if 'Do not contact' in p.labels or 'Do not email' in p.labels:
+            add_unique(reasons, 'your call')
+        if reasons:
+            add_unique(p.labels, 'Do not email')
+            dne_rows.append((p.who(), '; '.join(p.emails), '; '.join(reasons)))
+    for who, act, det, why in log:              # every dead address is also a suppression entry
+        if act == 'removed address' and why != 'automated sender':
+            dne_rows.append((who, det, why))
+    
     # people in the email history whose address isn't on any card, but whose name is: ask, never assume
     on_cards = {norm(e) for p in out for e in p.emails}
     by_full = collections.defaultdict(list)
@@ -485,6 +621,20 @@ def build(a):
     write_csv(os.path.join(a.out, 'master-contacts-google-TEST-5.csv'), hdr, test)
     with open(os.path.join(a.out, 'change-log.csv'), 'w', newline='') as f:
         w = csv.writer(f); w.writerow(['person', 'action', 'detail', 'reason']); w.writerows(log)
+    with open(os.path.join(a.out, 'do-not-email.csv'), 'w', newline='') as f:
+        w = csv.writer(f); w.writerow(['person', 'email', 'why']); w.writerows(dne_rows)
+    lists_dir = os.path.join(a.out, 'lists'); os.makedirs(lists_dir, exist_ok=True)
+    for old in os.listdir(lists_dir): os.remove(os.path.join(lists_dir, old))
+    segs = collections.defaultdict(list)
+    for p in out:
+        for l in p.labels:
+            if l.startswith(('Newsletter: ', 'Still in touch', 'Dormant', 'LinkedIn', 'Personal circle', 'Do not email')):
+                segs[l].append(p)
+    for l, ps in segs.items():
+        fn = re.sub(r'[^a-z0-9]+', '-', l.lower()).strip('-') + '.csv'
+        with open(os.path.join(lists_dir, fn), 'w', newline='') as f:
+            w = csv.writer(f); w.writerow(['name', 'email', 'company', 'labels'])
+            for p in ps: w.writerow([p.name(), (p.emails or [''])[0], p.org, '; '.join(x for x in p.labels if x != '* myContacts')])
     if letgo:
         with open(os.path.join(a.out, 'let-go.csv'), 'w', newline='') as f:
             w = csv.writer(f); w.writerow(['person', 'emails'])
@@ -524,6 +674,8 @@ def build(a):
         'automated_removed': sum(1 for x in log if x[3] == 'automated sender' or x[1] == 'removed card'),
         'new_addresses_found': sum(1 for x in log if x[1] == 'added address'),
         'let_go': len(letgo), 'no_current_email': len(questions['no_current_address']),
+        'sources': sources_read, 'do_not_email': len(dne_rows),
+        'lists': {l: len(ps) for l, ps in sorted(segs.items())},
         'questions': {k: len(v) for k, v in questions.items() if k not in ('sensitive', 'history_match')},
         'soft_bounces_kept': soft_hit, 'labels': dict(collections.Counter(l for p in out for l in p.labels)),
         'import_parts': (len(rows) + a.part_size - 1) // a.part_size,
@@ -545,6 +697,7 @@ def main():
     b.add_argument('--decisions', help="decisions.json with the person's answers")
     b.add_argument('--me', nargs='*', help="the person's own addresses (never kept as contacts)")
     b.add_argument('--dead-domain', nargs='*', help='company domains that no longer receive mail')
+    b.add_argument('--do-not-email', nargs='*', help='text files of addresses never to email (one per line, "# why" optional)')
     b.add_argument('--part-size', type=int, default=2500, help='Google imports at most 3,000 per file')
     h = sub.add_parser('header')
     h.add_argument('--in', dest='inputs', nargs=1, required=True)
