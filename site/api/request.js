@@ -17,7 +17,8 @@ module.exports = async (req, res) => {
   const situation = SITUATIONS[b.situation] || 'Not given';
   const note = String(b.note || '').trim().slice(0, 600);
   const source = String(b.source || 'direct').replace(/[^\w.\-]/g, '').slice(0, 60);
-  const { GITHUB_TOKEN, LEADS_REPO } = process.env;
+  const GITHUB_TOKEN = (process.env.GITHUB_TOKEN || '').trim().replace(/^["']|["']$/g, '');
+  const LEADS_REPO = (process.env.LEADS_REPO || '').trim();
   if (!GITHUB_TOKEN || !LEADS_REPO) return res.status(503).json({ error: 'Requests are not set up yet.' });
   const body = [`**Email:** ${email}`, `**What's changing:** ${situation}`, `**Came from:** ${source}`,
                 note ? `\n**Note:**\n> ${note.replace(/\n/g, '\n> ')}` : ''].join('\n');
@@ -27,6 +28,10 @@ module.exports = async (req, res) => {
                'X-GitHub-Api-Version': '2022-11-28' },
     body: JSON.stringify({ title: `Review request: ${situation}`, body, labels: ['request', source] }),
   });
-  if (!r.ok) return res.status(502).json({ error: 'Could not save the request.' });
+  if (!r.ok) {
+    const detail = await r.text().catch(() => '');
+    console.error('github', r.status, detail.slice(0, 300));          // visible in Vercel logs, never to the visitor
+    return res.status(502).json({ error: 'Could not save the request.', code: r.status });
+  }
   return res.status(200).json({ ok: true });
 };
