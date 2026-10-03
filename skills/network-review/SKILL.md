@@ -4,8 +4,8 @@ description: >-
   Cleans up a person's contacts across every account they've kept them in: removes dead addresses,
   folds duplicates, flags people who moved on, and produces one clean list in Google's import format,
   asking the person only about the few cases it can't be sure of. Optionally shows who they've drifted
-  from, using email headers. Use when someone says things like "clean up my contacts", "my contacts are
-  a mess", "duplicate contacts", "merge my contacts", "remove dead email addresses", "I'm leaving my job
+  from, using email headers. Use when someone says things like "clean up my contacts", "I'm about to
+  email my whole network", "clean my list before I send a newsletter / announcement", "my contacts are a mess", "duplicate contacts", "merge my contacts", "remove dead email addresses", "I'm leaving my job
   / my company", "I'm losing access to my work email", "export my contacts before my account closes",
   "who have I lost touch with", or asks for a network review. Works from contact exports and email headers;
   the person decides about people, and every change is logged and reversible.
