@@ -171,6 +171,10 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
 .hero h1 { font-size: clamp(36px, 5.6vw, 60px); }
 .srcs { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 18px; border-bottom: 1px solid var(--rule); }
 .srcs span { font: 500 12px var(--mono); border: 1px solid var(--rule); border-radius: 99px; padding: 4px 9px; color: var(--muted); }
+.trust { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.trust li { position: relative; padding-left: 26px; font-size: 16px; color: var(--muted); }
+.trust li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--accent); font-weight: 700; }
+.trust strong { color: var(--ink); }
 .moments { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .moments span.m { font: 500 14px var(--body); background: var(--surface); border: 1px solid var(--rule); border-radius: 99px; padding: 8px 14px; }
 .moments .lead { font: 500 13px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
@@ -197,9 +201,14 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
 
   <header class="hero">
     <div class="hero-copy">
-      <div class="kicker">A free skill for your AI assistant</div>
+      <div class="kicker">A free skill for the AI assistant you already use</div>
       <h1>Every contact you have, in one list you can trust.</h1>
       <p class="lede">Old work accounts, personal email, LinkedIn, your newsletter, your phone. Your AI pulls them into one master list, clears out the dead weight, and sorts everyone: who you're in touch with, who subscribes, who never to email. You confirm the few it isn't sure about.</p>
+      <ul class="trust" aria-label="What it is and isn't">
+        <li><strong>Free.</strong> No plan, no trial, no account.</li>
+        <li><strong>Not an app.</strong> A set of instructions your AI assistant follows, plus two small open scripts.</li>
+        <li><strong>Never asks for a password.</strong> You export your own contacts; it works on those files on your computer.</li>
+      </ul>
       <div class="install" role="group" aria-label="Install command">
         <code id="cmd">npx skills add getquaiint/quaiint</code>
         <button class="btn" id="copy-cmd" type="button">Copy</button>
@@ -267,7 +276,7 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
         <h3>Run it yourself in minutes</h3>
         <p style="color:var(--muted);font-size:15px">Claude Code, Codex, Cursor, Gemini CLI or any tool that reads Agent Skills. Export from each place you keep contacts (it tells you how), then ask.</p>
         <div class="install" role="group" aria-label="Install command"><code>npx skills add getquaiint/quaiint</code><button class="btn" type="button" data-copy="npx skills add getquaiint/quaiint">Copy</button></div>
-        <p style="font-size:14px;color:var(--muted)">No server: it runs on your machine through your assistant. Your AI provider sees what you share with it. <a href="https://github.com/getquaiint/quaiint">Code on GitHub</a>.</p>
+        <p style="font-size:14px;color:var(--muted)">Nothing to sign up for and no Quaiint server. It runs on your computer through your assistant, and your AI provider sees only what you share with it. Every line is <a href="https://github.com/getquaiint/quaiint">open on GitHub</a>.</p>
       </div>
       <div class="card" id="run-it-with-us">
         <div class="kicker">If you don't</div>

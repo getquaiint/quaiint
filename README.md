@@ -5,6 +5,10 @@
 Quaiint is a free [Agent Skill](https://agentskills.io) for the AI assistant you already use: Claude,
 Codex, Cursor, Gemini CLI, or any tool that reads `SKILL.md`.
 
+- **Free.** No plan, no trial, no account.
+- **Not an app.** A set of instructions your assistant follows, plus two small open scripts.
+- **Never asks for a password.** You export your own contacts; it works on those files on your computer.
+
 1. **One master list.** Contacts from every email account (old jobs included), LinkedIn, your newsletter
    subscribers, your phone and your spreadsheets become one list: dead addresses gone, duplicates folded,
    people who moved on flagged, and structure on top (still in touch, subscriber, LinkedIn, **do not
