@@ -28,7 +28,8 @@ the import is tested on five contacts first.
 4. **Download your contacts from each place into it:** each Google account (contacts.google.com → Export →
    Google CSV), LinkedIn (Settings → Data privacy → Get a copy of your data → Connections), your newsletter
    (Subscribers → Export), iPhone (icloud.com/contacts → Export vCard). Not sure how? Ask your assistant.
-5. **Optional:** paste any bounced-email notices into a note called "bounces" in the folder.
+5. **Bounced emails:** if your assistant is connected to your email, it finds bounces and "no longer with"
+   replies for you, reading only those notices. Otherwise, paste any bounce notices into a note called "bounces".
 6. **Tell your assistant:** "Build my master contact list from the My contacts folder on my Desktop."
 7. **Answer its questions.** Usually a handful. It handles the rest.
 8. **Import the list:** test file first at contacts.google.com → Import, check one contact, then the rest.

@@ -2,6 +2,7 @@
 """Run the bundled scripts on the fixtures and check every trap against truth.json.
 Exit code 0 only if everything passes.   python3 evals/run_evals.py"""
 import csv, json, os, subprocess, sys, tempfile
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'skills', 'network-review', 'scripts'))
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPTS = os.path.join(HERE, '..', 'skills', 'network-review', 'scripts')
@@ -70,6 +71,10 @@ check('newsletter: unsubscribes go on the do-not-email list', set(NL['unsubscrib
 check('do-not-email file applied', NL['dne_file'] in dne_emails)
 check('dead addresses also on the do-not-email list', set(T['dead'][:3]) <= dne_emails)
 check('new subscribers added as people', set(NL['new_subscribers']) <= all_emails)
+from contacts import read_bounces
+_dead, _soft, _ = read_bounces([os.path.join(FX, 'bounces.txt')])
+check('connector-style bounce lines: system sender skipped, real address caught',
+      T['connector_bounce'] in _dead and 'mailer-daemon@googlemail.com' not in _dead and T['connector_soft'] in _soft)
 check('segment lists written', all(os.path.exists(os.path.join(out, 'lists', f)) for f in ('do-not-email.csv', 'linkedin.csv', 'newsletter-substack.csv')))
 check('vCard: existing person merged, not duplicated', len(named.get(T['vcf_existing_person'], [])) == 1)
 check('no-current-email people kept and asked about', summary.get('no_current_email') == 12 and 'No current email' in q)

@@ -77,6 +77,11 @@ with open(os.path.join(FX, 'bounces.txt'), 'w') as f:
     for d in dead[12:]:
         u = d.split('@')[0]
         f.write(f'Automatic reply from {d}: "{u.replace(".", " ").title()} is no longer with the company. Please contact {u}@newco.com"\n')
+    # the way an assistant writes connector results: sender | subject | snippet
+    f.write('mailer-daemon@googlemail.com | Delivery Status Notification (Failure) | Address not found Your message wasn\'t delivered to gone.person@oldfirm.com because the address couldn\'t be found\n')
+    f.write('mailer-daemon@googlemail.com | Delivery Status Notification (Delay) | There was a temporary problem delivering your message to busy.person@fullbox.com. Gmail will retry\n')
+truth['connector_bounce'] = 'gone.person@oldfirm.com'
+truth['connector_soft'] = 'busy.person@fullbox.com'
 
 # trap 7: LinkedIn export (notes above the header; most rows have no email)
 li = ['Notes:', '"When exporting your connection data, you may notice that some of the email addresses are missing."', '',

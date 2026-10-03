@@ -232,6 +232,7 @@ def read_bounces(paths):
         text = open(p, encoding='utf-8', errors='ignore').read()
         for line in text.splitlines():
             es = [norm(e) for e in EMAIL.findall(line)]
+            es = [e for e in es if not re.match(r'(mailer-daemon|postmaster|no-?reply|bounces?)@', e)]   # the notice's sender, not the dead address
             if not es:
                 continue
             subject = es[0]

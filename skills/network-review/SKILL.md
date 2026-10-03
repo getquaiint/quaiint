@@ -48,8 +48,12 @@ Most people doing this are not technical. Talk like you're helping a smart 8th g
 3. One source at a time: tell them the exact clicks from `references/sources.md`, wait, confirm the file
    is in the folder. LinkedIn emails a link after about 10 minutes, so start it first and do the others
    while you wait.
-4. "Have any emails bounced? Paste the bounce notices into a note called **bounces** in the folder." And:
-   "Anyone you must never email? Family, people who asked you to stop?" Put those in **never-email.txt**.
+4. **Bounces.** If you're connected to their email (e.g. a Gmail connector), offer to find them yourself:
+   "Want me to look through your email for bounced messages and 'no longer with the company' replies? I'll
+   read only those notices." If yes, follow `references/bounces.md` and write **bounces.txt** into the
+   folder. If you're not connected, ask them to paste any bounce notices into a note called **bounces**.
+   Then: "Anyone you must never email? Family, people who asked you to stop?" Put those in
+   **never-email.txt**.
 5. Build the list (Part 1 below). Tell them the numbers in one sentence.
 6. Ask the questions. Apply their answers.
 7. Walk them through the import: the 5-contact test first, check one contact together, then the rest.
