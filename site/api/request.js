@@ -3,7 +3,7 @@
 // Env (Vercel project settings): GITHUB_TOKEN (fine-grained, Issues: read/write on LEADS_REPO only),
 //                                LEADS_REPO (e.g. "getgetquaiint/leads").
 const SITUATIONS = { leaving: 'Leaving or left a company', account: 'An old account is shutting down',
-                     sold: 'Sold or wound down a company', overdue: 'Just overdue' };
+                     sold: 'Sold or wound down a company', overdue: 'About to email my network' };
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 
 module.exports = async (req, res) => {

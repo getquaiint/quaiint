@@ -167,27 +167,43 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
 .addr { font: 500 16px var(--mono); background: var(--accent-soft); padding: 8px 12px; border-radius: 8px; overflow-wrap: anywhere; user-select: all; }
 </style>
 
+<style>
+.hero h1 { font-size: clamp(36px, 5.6vw, 60px); }
+.moments { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.moments span.m { font: 500 14px var(--body); background: var(--surface); border: 1px solid var(--rule); border-radius: 99px; padding: 8px 14px; }
+.moments .lead { font: 500 13px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+.vs { width: 100%; border-collapse: collapse; font-size: 16px; }
+.vs th, .vs td { padding: 12px 10px; border-bottom: 1px solid var(--rule); text-align: left; }
+.vs th { font: 500 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.vs td.c, .vs th.c { text-align: center; width: 120px; }
+.vs .yes { color: var(--accent); font-weight: 700; }
+.vs .no { color: var(--muted); }
+.vs tr.hi td { font-weight: 600; }
+.small-link { font-size: 15px; }
+.lede2 { font-size: 18px; color: var(--muted); max-width: 52ch; }
+.paths { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .paths { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
 <div class="page">
   <nav aria-label="Site">
     <div class="mark">Quaiint<span>.</span></div>
-    <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="#how">How it works</a><a href="https://github.com/getquaiint/quaiint">GitHub</a><a href="#get">Get it free</a></div>
+    <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="#vs">vs. Google</a><a href="https://github.com/getquaiint/quaiint">GitHub</a><a href="#get">Get it free</a></div>
   </nav>
 
   <header class="hero">
     <div class="hero-copy">
-      <div class="kicker">A free skill for the AI assistant you already use</div>
-      <h1>Clear the dead weight out of your contacts.</h1>
-      <p class="lede">Quaiint has your AI go through every account you've kept contacts in, find the dead addresses, duplicates and people who moved on, and fix them. It handles what it's sure about and asks you only about the rest: a handful of questions, not thousands of rows.</p>
+      <div class="kicker">A free skill for your AI assistant</div>
+      <h1>Before you email everyone you know, clear out the dead weight.</h1>
+      <p class="lede">Your AI cleans every account you've kept contacts in. It fixes what it's sure of, asks you about the rest, then shows you who you've drifted from.</p>
       <div class="install" role="group" aria-label="Install command">
         <code id="cmd">npx skills add getquaiint/quaiint</code>
         <button class="btn" id="copy-cmd" type="button">Copy</button>
       </div>
       <p class="copied" id="cmd-status" role="status" hidden></p>
-      <p style="font-size:15px;color:var(--muted)">Then ask your assistant: <strong style="color:var(--ink)">"Clean up my contacts."</strong></p>
+      <p class="small-link" style="color:var(--muted)">Then tell your assistant <strong style="color:var(--ink)">"Clean up my contacts."</strong> Not a terminal person? <a href="#get">We'll run it with you →</a></p>
     </div>
-
     <div class="panel" aria-label="Example questions and change log">
         <div class="panel-head"><span class="kicker">Done for you · then 3 questions</span><span class="tag">Example</span></div>
         <div class="log" aria-live="polite"><span class="kicker">Done automatically</span><ol id="log">
@@ -201,128 +217,76 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
       </div>
   </header>
 
-  <section class="pain" aria-labelledby="pain-h">
-    <div class="kicker">The problem</div>
-    <h2 id="pain-h">Your address book stopped telling the truth years ago.</h2>
-    <div class="pain-grid">
-      <div class="pain-item"><h3>A lot of it is dead.</h3><p>Old work addresses, acquired companies, people who moved on. Nothing tells you which until a note bounces.</p></div>
-      <div class="pain-item"><h3>It lives in accounts you're losing.</h3><p>The company you left, the one you sold, the one shutting down in March. Each holds a slice of who you know, and the slice goes when the account does.</p></div>
-      <div class="pain-item"><h3>The people who matter are buried.</h3><p>Five thousand names, and the ones you'd most like to hear from are the ones you haven't written to in years. Scrolling won't find them.</p></div>
+  <section class="moments" aria-label="When people use it">
+    <span class="lead">Use it when</span>
+    <span class="m">You're about to email your whole network</span>
+    <span class="m">You're leaving a job</span>
+    <span class="m">An old account is about to shut down</span>
+  </section>
+
+  <section id="vs" style="display:grid;gap:18px" aria-labelledby="vs-h">
+    <h2 id="vs-h">What Google's "Merge &amp; fix" doesn't do</h2>
+    <div class="tbl" style="overflow-x:auto">
+      <table class="vs">
+        <thead><tr><th></th><th class="c">Google</th><th class="c">Quaiint</th></tr></thead>
+        <tbody>
+          <tr><td>Merge duplicates in one account</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+          <tr class="hi"><td>Clean every account at once, old jobs included</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+          <tr class="hi"><td>Find dead addresses from bounces and "no longer with the company" replies</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+          <tr class="hi"><td>Swap in someone's new address when an auto-reply gives it</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+          <tr class="hi"><td>Ask before treating two people with the same name as one</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+          <tr class="hi"><td>Log every change with its reason</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+          <tr class="hi"><td>Show who you've drifted from</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
-  <section id="how" style="display:grid;gap:28px" aria-labelledby="how-h">
-    <div class="kicker">How it works</div>
-    <h2 id="how-h">Your AI does the work. You confirm the few it can't be sure of.</h2>
-    <div class="acts">
-      <div class="act">
-        <span class="kicker">The cleanup · mostly automatic</span>
-        <h3>One clean list</h3>
-        <ul>
-          <li>Pulls every account's contacts into one list, in Google's own import format.</li>
-          <li>Removes dead addresses from bounces and "no longer with the company" replies, and keeps the new address when one is given.</li>
-          <li>Folds duplicates only when the names agree too, so an office switchboard never turns ten colleagues into one card.</li>
-        </ul>
-      </div>
-      <div class="act">
-        <span class="kicker">Bonus · from your email</span>
-        <h3>Who you've drifted from</h3>
-        <ul>
-          <li>Reads email headers only: who, when, how often. Not what you wrote.</li>
-          <li>Measures relationships by back-and-forth over time, not volume. A friend you wrote 40 times outranks a colleague's 4,000 work emails.</li>
-          <li>Leaves out the transactions (lawyers, vendors, recruiters) and shows you the people you were close to and lost touch with. Yours to act on or not.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="demo-wrap">
-      <div style="display:grid;gap:14px;align-content:start">
-        <h3>And who you've drifted from, while it's at it.</h3>
-        <p style="color:var(--muted)">If you connect your email, it also notices the people you were close to and haven't written to in years. No homework: just a list, if you want it.</p>
-      </div>
-      <div class="panel" aria-label="Example reconnect list">
-      <div class="panel-head"><span class="kicker">Who you've drifted from</span><span class="tag">Example</span></div>
-      <div class="rc"><div class="top"><span class="who">Theo Hale</span><span class="quiet">quiet since 2019</span></div><p>Your co-founder's first hire. Four years of near-daily email, then he moved to Lisbon.</p></div>
-      <div class="rc"><div class="top"><span class="who">Priya Raman</span><span class="quiet">quiet since 2021</span></div><p>Ran the 2018 pilot with you. Just started a new company, per her signature.</p></div>
-      <div class="rc"><div class="top"><span class="who">Elena Ortiz</span><span class="quiet">quiet since 2016</span></div><p>Close friend from the Boston years. You wrote each other every few weeks for four years.</p></div>
-      <div class="rc"><div class="top"><span class="who">Marcus Webb</span><span class="quiet">quiet since 2020</span></div><p>Your first board observer. Long threads about hiring, then nothing.</p></div>
-    </div>
-    </div>
-  </section>
-
-  <section class="promises" aria-label="Promises">
-    <div class="promise"><h3>No server of ours</h3><p>It runs inside your own assistant, on files and accounts you connect. We never see your contacts. Your AI provider does, so use one you trust with your email.</p></div>
-    <div class="promise"><h3>Everything on the record</h3><p>Every removal, merge and label is logged with its reason. Your original exports are copied first and never touched.</p></div>
-    <div class="promise"><h3>Nothing you can't undo</h3><p>The import is tested on five contacts first, and Google's Undo changes puts everything back. Nobody gets cut without your say.</p></div>
-  </section>
-
-  <section class="proof" aria-labelledby="proof-h">
-    <div class="kicker">First run</div>
-    <h2 id="proof-h">Twenty years of one founder's contacts, one afternoon.</h2>
+  <section class="proof" aria-label="First run">
+    <p class="quote">"I was about to email my whole network and one address in twenty was dead. It cleaned up twenty years of contacts in an afternoon, asked me 17 questions, and reminded me of people I'd lost touch with."<cite>A 30-year executive</cite></p>
     <div class="figures">
-      <div class="fig"><span class="n">6,375</span><span class="l">people in one list, from three accounts and a spreadsheet</span></div>
-      <div class="fig"><span class="n">1,015</span><span class="l">current relationships his address book had never saved</span></div>
-      <div class="fig"><span class="n">129</span><span class="l">dead addresses removed, with new ones found for some</span></div>
-      <div class="fig"><span class="n">17</span><span class="l">questions he had to answer himself</span></div>
+      <div class="fig"><span class="n">6,375</span><span class="l">people, from three accounts into one list</span></div>
+      <div class="fig"><span class="n">129</span><span class="l">dead addresses removed</span></div>
+      <div class="fig"><span class="n">1,015</span><span class="l">current contacts his address book never saved</span></div>
+      <div class="fig"><span class="n">17</span><span class="l">questions he answered. The AI handled the rest.</span></div>
     </div>
-    <p class="quote">"This actually helped me see my network more clearly. Remembering people from way back to connect with."<cite>A 30-year executive, after his first review</cite></p>
   </section>
 
-  <section class="research" aria-labelledby="research-h">
-    <div class="kicker">About that bonus</div>
-    <h3 id="research-h">The people you've lost touch with are often the most useful to find again.</h3>
-    <p>In studies of executives who got back in touch with people they hadn't spoken to in years, those conversations took less time than talks with current contacts and were rated as useful or more so. Old ties bring fresh information and still carry trust.</p>
-    <p class="src">Levin, Walter &amp; Murnighan, "Dormant Ties: The Value of Reconnecting," <em>Organization Science</em>, 2011.</p>
-  </section>
-
-  <section class="get" id="get" aria-labelledby="get-h">
-    <div class="card">
-      <div class="kicker">Free, open source</div>
-      <h2 id="get-h">Get it</h2>
-      <div class="install" role="group" aria-label="Install command"><code>npx skills add getquaiint/quaiint</code><button class="btn" type="button" data-copy="npx skills add getquaiint/quaiint">Copy</button></div>
-      <p>Or download it from <a href="https://github.com/getquaiint/quaiint">GitHub</a> and put the <code>network-review</code> folder in your assistant's skills folder.</p>
-      <div class="works" aria-label="Works with"><span>Claude Code</span><span>Claude desktop</span><span>Codex</span><span>Cursor</span><span>Gemini CLI</span><span>any Agent Skills tool</span></div>
-      <p style="font-size:15px;color:var(--muted)">For the reconnect list it needs your email history: an email connector in your assistant, or a mailbox export from Google Takeout. For the cleanup, your contact exports. It runs a little Python on your machine; nothing is uploaded.</p>
-    </div>
-
-    <div class="card" id="run-it-with-us">
-      <div class="kicker">Run it with us</div>
-      <h2>Going through a change?</h2>
-      <p>Leaving a company, selling one, losing an old account? We'll run your first review with you. Free while we learn.</p>
-      <form id="signup" hidden novalidate>
-        <label for="email">Email<input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
-        <label for="situation">What's changing
-          <select id="situation" name="situation">
-            <option value="leaving">Leaving or left a company</option>
-            <option value="account">An old account is shutting down</option>
-            <option value="sold">Sold or wound down a company</option>
-            <option value="overdue">Nothing. It's just overdue</option>
-          </select>
-        </label>
-        <label for="note">Anything we should know <span style="font-weight:400;color:var(--muted)">(optional)</span><textarea id="note" name="note" maxlength="600"></textarea></label>
-        <input type="text" name="company" id="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
-        <button class="btn" type="submit" id="submit">Ask for a review</button>
-        <p class="form-note">One reply, about your review. Nothing else.</p>
-      </form>
-      <div class="contact" id="contact-fallback">
-        <p>Write with what's changing and roughly how many accounts you have. One reply, about your review.</p>
-        <div class="addr-row"><code class="addr" id="addr">davebalter@gmail.com</code><button class="btn small" type="button" data-copy-el="addr">Copy address</button></div>
+  <section class="get" id="get" aria-labelledby="get-h" style="display:grid;gap:18px">
+    <h2 id="get-h">Two ways to use it. Both free.</h2>
+    <div class="paths">
+      <div class="card">
+        <div class="kicker">If you use an AI coding assistant</div>
+        <h3>Run it yourself in minutes</h3>
+        <p style="color:var(--muted);font-size:15px">Claude Code, Codex, Cursor, Gemini CLI or any tool that reads Agent Skills. Export your contacts from each account, then ask.</p>
+        <div class="install" role="group" aria-label="Install command"><code>npx skills add getquaiint/quaiint</code><button class="btn" type="button" data-copy="npx skills add getquaiint/quaiint">Copy</button></div>
+        <p style="font-size:14px;color:var(--muted)">No server: it runs on your machine through your assistant. Your AI provider sees what you share with it. <a href="https://github.com/getquaiint/quaiint">Code on GitHub</a>.</p>
       </div>
-      <p class="status" id="status" role="status" hidden></p>
+      <div class="card" id="run-it-with-us">
+        <div class="kicker">If you don't</div>
+        <h3>We'll run it with you</h3>
+        <p style="color:var(--muted);font-size:15px">Leaving a company, selling one, about to email everyone? Tell us, and we'll do your first cleanup together.</p>
+        <form id="signup" hidden novalidate>
+          <label for="email">Email<input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+          <label for="situation">What's happening
+            <select id="situation" name="situation">
+              <option value="overdue">About to email my network</option>
+              <option value="leaving">Leaving or left a company</option>
+              <option value="account">An old account is shutting down</option>
+              <option value="sold">Sold or wound down a company</option>
+            </select>
+          </label>
+          <input type="hidden" id="note" name="note" value="">
+          <input type="text" name="company" id="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+          <button class="btn" type="submit" id="submit">Run it with me</button>
+        </form>
+        <div class="contact" id="contact-fallback">
+          <div class="addr-row"><code class="addr" id="addr">davebalter@gmail.com</code><button class="btn small" type="button" data-copy-el="addr">Copy address</button></div>
+        </div>
+        <p class="status" id="status" role="status" hidden></p>
+      </div>
     </div>
   </section>
-
-  <section aria-labelledby="faq-h" style="display:grid;gap:20px">
-    <h2 id="faq-h">Questions</h2>
-    <div class="faq">
-      <div><h3>Do you see my contacts or email?</h3><p>No. There's no Quaiint server. Everything goes between you, your assistant and your accounts. Your AI provider sees what you give your assistant.</p></div>
-      <div><h3>Does it need my email?</h3><p>Not for the cleanup. For the drifted-from list it reads only the headers: who, to whom, when. It asks before using subject lines, and never reads message bodies unless you ask.</p></div>
-      <div><h3>Can it delete people?</h3><p>No. It removes dead addresses and logs each one. Cutting a person is always your call, and the import is yours to click.</p></div>
-      <div><h3>What does it cost?</h3><p>The skill is free and open source. Your assistant's normal usage applies.</p></div>
-      <div><h3>How often should I run it?</h3><p>Once a quarter: a fresh reconnect list, and a list that stays current.</p></div>
-    </div>
-  </section>
-
 </div>
 <script>
 (function () {
