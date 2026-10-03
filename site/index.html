@@ -171,6 +171,12 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
 .hero h1 { font-size: clamp(36px, 5.6vw, 60px); }
 .srcs { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 18px; border-bottom: 1px solid var(--rule); }
 .srcs span { font: 500 12px var(--mono); border: 1px solid var(--rule); border-radius: 99px; padding: 4px 9px; color: var(--muted); }
+.howto { margin: 0; padding-left: 24px; display: grid; gap: 16px; max-width: 760px; }
+.howto > li { padding-left: 6px; color: var(--muted); }
+.howto > li::marker { font: 700 16px var(--mono); color: var(--accent); }
+.howto strong { color: var(--ink); }
+.howto ul { margin: 8px 0; padding-left: 18px; display: grid; gap: 4px; font-size: 15px; }
+.howto .install { margin-top: 10px; max-width: 460px; }
 .trust { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .trust li { position: relative; padding-left: 26px; font-size: 16px; color: var(--muted); }
 .trust li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--accent); font-weight: 700; }
@@ -196,7 +202,7 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
 <div class="page">
   <nav aria-label="Site">
     <div class="mark">Quaiint<span>.</span></div>
-    <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="#vs">vs. Google</a><a href="https://github.com/getquaiint/quaiint">GitHub</a><a href="#get">Get it free</a></div>
+    <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="#vs">vs. Google</a><a href="https://github.com/getquaiint/quaiint">GitHub</a><a href="#how-to">How to do it</a></div>
   </nav>
 
   <header class="hero">
@@ -214,7 +220,7 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
         <button class="btn" id="copy-cmd" type="button">Copy</button>
       </div>
       <p class="copied" id="cmd-status" role="status" hidden></p>
-      <p class="small-link" style="color:var(--muted)">Then tell your assistant <strong style="color:var(--ink)">"Build my master contact list."</strong> Not a terminal person? <a href="#get">We'll run it with you →</a></p>
+      <p class="small-link" style="color:var(--muted)">Then tell your assistant <strong style="color:var(--ink)">"Build my master contact list."</strong> <a href="#how-to">See the steps →</a></p>
     </div>
     <div class="panel" aria-label="Example questions and change log">
         <div class="panel-head"><span class="kicker">Your master list · being built</span><span class="tag">Example</span></div>
@@ -268,41 +274,30 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
     </div>
   </section>
 
-  <section id="get" aria-labelledby="get-h" style="display:grid;gap:18px">
-    <h2 id="get-h">Two ways to use it. Both free.</h2>
-    <div class="paths">
-      <div class="card">
-        <div class="kicker">If you use an AI coding assistant</div>
-        <h3>Run it yourself in minutes</h3>
-        <p style="color:var(--muted);font-size:15px">Claude Code, Codex, Cursor, Gemini CLI or any tool that reads Agent Skills. Export from each place you keep contacts (it tells you how), then ask.</p>
-        <div class="install" role="group" aria-label="Install command"><code>npx skills add getquaiint/quaiint</code><button class="btn" type="button" data-copy="npx skills add getquaiint/quaiint">Copy</button></div>
-        <p style="font-size:14px;color:var(--muted)">Nothing to sign up for and no Quaiint server. It runs on your computer through your assistant, and your AI provider sees only what you share with it. Every line is <a href="https://github.com/getquaiint/quaiint">open on GitHub</a>.</p>
-      </div>
-      <div class="card" id="run-it-with-us">
-        <div class="kicker">If you don't</div>
-        <h3>We'll run it with you</h3>
-        <p style="color:var(--muted);font-size:15px">Leaving a company, about to email everyone, or just want one list? Tell us, and we'll build your master list together.</p>
-        <form id="signup" hidden novalidate>
-          <label for="email">Email<input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
-          <label for="situation">What's happening
-            <select id="situation" name="situation">
-              <option value="overdue">I want one master list</option>
-              <option value="emailing">About to email my network</option>
-              <option value="leaving">Leaving or left a company</option>
-              <option value="account">An old account is shutting down</option>
-              <option value="sold">Sold or wound down a company</option>
-            </select>
-          </label>
-          <input type="hidden" id="note" name="note" value="">
-          <input type="text" name="company" id="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
-          <button class="btn" type="submit" id="submit">Run it with me</button>
-        </form>
-        <div class="contact" id="contact-fallback">
-          <div class="addr-row"><code class="addr" id="addr">davebalter@gmail.com</code><button class="btn small" type="button" data-copy-el="addr">Copy address</button></div>
-        </div>
-        <p class="status" id="status" role="status" hidden></p>
-      </div>
+  <section id="how-to" style="display:grid;gap:22px" aria-labelledby="how-h">
+    <div style="display:grid;gap:10px">
+      <div class="kicker">How to do it · about an hour, mostly waiting for downloads</div>
+      <h2 id="how-h">Eight steps. Your assistant walks you through each one.</h2>
     </div>
+    <ol class="howto">
+      <li><strong>Open your AI assistant.</strong> Claude Code, Codex, Cursor, or any assistant that uses skills.</li>
+      <li><strong>Add the skill.</strong> Paste this, or just ask your assistant to install it:
+        <div class="install" role="group" aria-label="Install command"><code>npx skills add getquaiint/quaiint</code><button class="btn" type="button" data-copy="npx skills add getquaiint/quaiint">Copy</button></div></li>
+      <li><strong>Make a folder on your Desktop called "My contacts".</strong> Everything goes in there.</li>
+      <li><strong>Download your contacts from each place into that folder.</strong>
+        <ul>
+          <li>Each Google account: contacts.google.com → Export → Google CSV</li>
+          <li>LinkedIn: Settings → Data privacy → Get a copy of your data → Connections (it emails you a file)</li>
+          <li>Your newsletter: Subscribers → Export</li>
+          <li>iPhone: icloud.com/contacts → select all → Export vCard</li>
+        </ul>
+        Not sure how? Ask your assistant: "How do I export my contacts from LinkedIn?"</li>
+      <li><strong>Optional: bounced emails.</strong> If old emails bounced, paste those notices into a note called "bounces" in the same folder.</li>
+      <li><strong>Tell your assistant:</strong> "Build my master contact list from the My contacts folder on my Desktop."</li>
+      <li><strong>Answer its questions.</strong> Usually a handful, like "Are these two Sam Lees the same person?" Everything else it handles.</li>
+      <li><strong>Bring the list home.</strong> It gives you a 5-contact test file first. Import it at contacts.google.com → Import, check one contact, then import the rest. Changed your mind? Settings → Undo changes.</li>
+    </ol>
+    <p style="color:var(--muted);font-size:15px">You also get a do-not-email list. Use it before you send anything to a lot of people. Nothing to sign up for, no Quaiint server, and every line is <a href="https://github.com/getquaiint/quaiint">open on GitHub</a>.</p>
   </section>
 </div>
 <script>
@@ -333,24 +328,6 @@ footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wr
     });
   });
 
-  // The request form only works on quaiint.com (it posts to /api/request); elsewhere, show the address.
-  var form = document.getElementById('signup');
-  if (/(^|\.)quaiint\.com$/.test(location.hostname) || location.hostname === 'localhost') {
-    form.hidden = false; document.getElementById('contact-fallback').hidden = true;
-    var src = new URLSearchParams(location.search).get('utm_source') || document.referrer.replace(/^https?:\/\//, '').split('/')[0] || 'direct';
-    form.addEventListener('submit', function (ev) {
-      ev.preventDefault();
-      var email = document.getElementById('email').value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { status.textContent = 'Enter an email address so we can reach you.'; status.className = 'status err'; status.hidden = false; return; }
-      var btn = document.getElementById('submit'); btn.disabled = true;
-      fetch('/api/request', { method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email: email, situation: document.getElementById('situation').value, note: document.getElementById('note').value.trim(),
-                               company: document.getElementById('company').value, source: src }) })
-        .then(function (r) { if (!r.ok) throw new Error(r.status); status.textContent = 'Got it. We’ll write to you about your review.'; status.className = 'status'; status.hidden = false; form.reset(); })
-        .catch(function () { status.textContent = 'That didn’t send. Write to davebalter@gmail.com instead.'; status.className = 'status err'; status.hidden = false; })
-        .finally(function () { btn.disabled = false; });
-    });
-  }
 })();
 </script>
 
