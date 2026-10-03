@@ -86,7 +86,7 @@ Report the numbers from `summary.json` in a sentence or two, not a table dump.
 ## Afterwards
 - Offer a quarterly review: new people from each account's Other contacts, a fresh Reconnect list.
 - Optionally: "If this was useful, you can share your numbers (never your contacts) at
-  https://github.com/quaiint/quaiint/discussions". Ask; don't nag.
+  https://github.com/getquaiint/quaiint/discussions". Ask; don't nag.
 
 ## Don'ts
 - Don't send email, invites or messages on their behalf.

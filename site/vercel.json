@@ -7,6 +7,6 @@
     ] }
   ],
   "redirects": [
-    { "source": "/github", "destination": "https://github.com/quaiint/quaiint", "permanent": false }
+    { "source": "/github", "destination": "https://github.com/getquaiint/quaiint", "permanent": false }
   ]
 }

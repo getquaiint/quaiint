@@ -16,7 +16,7 @@ the import is tested on five contacts first.
 ## Install
 
 ```
-npx skills add quaiint/quaiint
+npx skills add getquaiint/quaiint
 ```
 
 Or copy `skills/network-review/` into your assistant's skills folder (Claude Code: `~/.claude/skills/`).
@@ -61,7 +61,7 @@ python3 evals/run_evals.py
 26 checks across both scripts. See `evals/README.md` for the end-to-end test with a fresh agent.
 
 ## Share how it went
-Numbers only, never contacts: [Discussions](https://github.com/quaiint/quaiint/discussions).
+Numbers only, never contacts: [Discussions](https://github.com/getquaiint/quaiint/discussions).
 Going through a career change and want help with your first review? Open a discussion or write to the
 address on [the site](https://quaiint.com).
 

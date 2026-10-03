@@ -1,7 +1,7 @@
 // POST /api/request — a "run it with us" request becomes an issue in a PRIVATE GitHub repo,
 // so every lead lands in Dave's inbox and stays on the record. No database, no third party.
 // Env (Vercel project settings): GITHUB_TOKEN (fine-grained, Issues: read/write on LEADS_REPO only),
-//                                LEADS_REPO (e.g. "quaiint/leads").
+//                                LEADS_REPO (e.g. "getgetquaiint/leads").
 const SITUATIONS = { leaving: 'Leaving or left a company', account: 'An old account is shutting down',
                      sold: 'Sold or wound down a company', overdue: 'Just overdue' };
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;

@@ -5,10 +5,10 @@
 ## Before day 1 (Dave, about 45 minutes)
 | | Step | Why |
 |---|---|---|
-| 1 | Buy **quaiint.com** (available as of 10/2) on Vercel | The site, the form, and the address on every link |
-| 2 | Create the GitHub org **quaiint**, then a **public** repo `quaiint/quaiint` (Claude pushes the code once it exists) | `npx skills add quaiint/quaiint` and skills.sh need a public repo |
-| 3 | Create a **private** repo `quaiint/leads` and a fine-grained token with Issues read/write on it only | Every "run it with us" request becomes an issue: emailed to you, private, permanent |
-| 4 | New Vercel project from `site/`, add env vars `GITHUB_TOKEN` and `LEADS_REPO=quaiint/leads`, attach quaiint.com | Claude can do this with the Vercel CLI once you OK it |
+| 1 | ✅ **quaiint.com** bought on Vercel (10/2) | The site, the form, and the address on every link |
+| 2 | ✅ GitHub org **getquaiint** (10/2; "quaiint" was taken). Public repo `getquaiint/quaiint` (Claude pushes the code once it exists) | `npx skills add getquaiint/quaiint` and skills.sh need a public repo |
+| 3 | Create a **private** repo `getquaiint/leads` and a fine-grained token with Issues read/write on it only | Every "run it with us" request becomes an issue: emailed to you, private, permanent |
+| 4 | New Vercel project from `site/`, add env vars `GITHUB_TOKEN` and `LEADS_REPO=getquaiint/leads`, attach quaiint.com | Claude can do this with the Vercel CLI once you OK it |
 | 5 | Run your own reconnect review (`"Who should I reconnect with?"`) and write to 3 people from it | You need a true story before telling one |
 
 ## Days 1–14
@@ -29,7 +29,7 @@
 | Installs | skills.sh install count; GitHub clones and traffic (the repo's Insights) |
 | Interest | GitHub stars, site visits (Vercel Analytics), visits from the davebalter.com footer (`utm_source=davebalter`) |
 | Completed reviews | Results shared in GitHub Discussions; replies to your notes |
-| Want help | Issues in `quaiint/leads` |
+| Want help | Issues in `getquaiint/leads` |
 
 ## Go / no-go on day 14
 - **Go** (build the done-with-you offer and a price per completed review): **100+ installs, 15+ completed
