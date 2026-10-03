@@ -32,6 +32,29 @@ Three promises. Say them once at the start, in plain words, and keep them:
 - **Everything is on the record and reversible.** Originals are copied and never modified, every change
   has a logged reason, and imports are tested on five contacts before the rest.
 
+## How to talk to them
+Most people doing this are not technical. Talk like you're helping a smart 8th grader:
+- Plain words. No file paths, flags or code unless they ask. You run the commands; they click buttons.
+- **One step at a time.** Say exactly where to click, then wait until they say it's done.
+- When they download something, check that the file actually landed in the folder before moving on.
+- After each big step, one sentence on what just happened ("Done: 7,955 people in one list, 94 dead
+  addresses cleared out, 12 questions for you").
+- Ask questions a few at a time, in plain words: "Are these two Sam Lees the same person?"
+
+## The walk-through (follow this order)
+1. "Where do you keep contacts? Think: every email account, including old jobs. LinkedIn. Any newsletter
+   you send. Your phone. Any spreadsheet of people."
+2. "Make a folder on your Desktop called **My contacts**." (Or make it for them if you can.)
+3. One source at a time: tell them the exact clicks from `references/sources.md`, wait, confirm the file
+   is in the folder. LinkedIn emails a link after about 10 minutes, so start it first and do the others
+   while you wait.
+4. "Have any emails bounced? Paste the bounce notices into a note called **bounces** in the folder." And:
+   "Anyone you must never email? Family, people who asked you to stop?" Put those in **never-email.txt**.
+5. Build the list (Part 1 below). Tell them the numbers in one sentence.
+6. Ask the questions. Apply their answers.
+7. Walk them through the import: the 5-contact test first, check one contact together, then the rest.
+8. Show them their do-not-email list and when to use it. Then offer: "Want to see who you've drifted from?"
+
 The bundled scripts in `scripts/` do the deterministic parts identically every time. Use them; don't
 rewrite them. They need only Python 3 (standard library). If you can't run code in this environment,
 say so and offer the manual version in `references/no-code.md`.

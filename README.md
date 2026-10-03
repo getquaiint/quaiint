@@ -20,15 +20,21 @@ Codex, Cursor, Gemini CLI, or any tool that reads `SKILL.md`.
 You decide about people. Every change is logged with a reason, your originals are never modified, and
 the import is tested on five contacts first.
 
-## Install
+## How to do it (about an hour, mostly waiting for downloads)
 
-```
-npx skills add getquaiint/quaiint
-```
+1. **Open your AI assistant.** Claude Code, Codex, Cursor, or any assistant that uses skills.
+2. **Add the skill:** `npx skills add getquaiint/quaiint` (or ask your assistant to install it).
+3. **Make a folder on your Desktop called "My contacts."**
+4. **Download your contacts from each place into it:** each Google account (contacts.google.com → Export →
+   Google CSV), LinkedIn (Settings → Data privacy → Get a copy of your data → Connections), your newsletter
+   (Subscribers → Export), iPhone (icloud.com/contacts → Export vCard). Not sure how? Ask your assistant.
+5. **Optional:** paste any bounced-email notices into a note called "bounces" in the folder.
+6. **Tell your assistant:** "Build my master contact list from the My contacts folder on my Desktop."
+7. **Answer its questions.** Usually a handful. It handles the rest.
+8. **Import the list:** test file first at contacts.google.com → Import, check one contact, then the rest.
+   Changed your mind? Settings → Undo changes.
 
-Or copy `skills/network-review/` into your assistant's skills folder (Claude Code: `~/.claude/skills/`).
-
-Then say: **"Clean up my contacts."**
+Manual install: copy `skills/network-review/` into your assistant's skills folder (Claude Code: `~/.claude/skills/`).
 
 ## What it needs
 - **Exports** from wherever you keep contacts: Google (each account), iCloud, LinkedIn, Substack,
